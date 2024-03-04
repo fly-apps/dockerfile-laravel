@@ -30,9 +30,13 @@ class GenerateCommand extends Command
      */
     public function handle()
     {
-        file_put_contents('Dockerfile', view('dockerfile', [
+        $r = file_put_contents('Dockerfile', (string)view('dockerfile', [
             'octane' => $this->option('octane'),
             'build_assets' => ! $this->option('no-assets')
         ]));
+
+        return ($r === false)
+            ? Command::FAILURE
+            : Command::SUCCESS;
     }
 }
