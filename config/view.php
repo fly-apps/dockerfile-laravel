@@ -4,9 +4,7 @@ return [
     'paths' => [
         resource_path('views'),
     ],
-
-    'compiled' => env(
-        'VIEW_COMPILED_PATH',
-        sys_get_temp_dir(), //realpath(storage_path('framework/views'))
-    ),
+   'compiled' => \Phar::running()
+       ? getcwd().'/storage/framework/views'
+       : env('VIEW_COMPILED_PATH', realpath(storage_path('framework/views'))),
 ];
