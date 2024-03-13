@@ -62,4 +62,4 @@ And that's it!
 
 # Contribution
 
-Make a Pull Request please. The Laravel team at Fly.io will review your PR, this helps the repository a ton, your contribution is much appreaciated---thanks so much!
+Make a Pull Request please. The Laravel team at Fly.io will review your PR, this helps the repository a ton. Your contribution is much appreciated---thank you!
