@@ -1,14 +1,19 @@
 {
     "name": "fly-apps/dockerfile-laravel",
     "description": "Dockerfile generator and Fly.io helper.",
-    "keywords": ["fly.io", "docker", "dockerfile"],
+    "keywords": ["fly.io", "laravel", "docker", "dockerfile", "generate","cli"],
     "homepage": "https://fly.io/docs/laravel",
+    "version": "1.0.0",
     "type": "project",
     "license": "MIT",
     "authors": [
         {
             "name": "Chris Fidao",
             "email": "fideloper@gmail.com"
+        },
+        {
+            "name": "Kathryn Anne Tan",
+            "email": "kathryn@fly.io"
         }
     ],
     "require": {},
