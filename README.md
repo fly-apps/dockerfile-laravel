@@ -62,7 +62,7 @@ You can run an instance of this image afterwards:
 docker run -p <port-in-your-machine>:8080 <image-name>
 ```
 
-And access your Laravel app in the browser by visiting the local instance of it: `127.0.0.1:<port-in-your-machine>`
+And access a containerized instance of your Laravel app in the browser by visiting `127.0.0.1:<port-in-your-machine>`!
 
 ## Local Development
 
@@ -99,7 +99,6 @@ Simply run the build command:
 ```
 php dockerfile-laravel app:build
 ```
-
 #### Build View Changes 
 If changes were made in any of the view files, make sure to clear the cached views( For now, this can be done by manually deleting the cached files ). The path to where the views' caches are stored is configured in `config/view.php`. 
 
@@ -108,14 +107,11 @@ Remember, if you don't delete cached views, your fresh "view changes" are unlike
 So, if your view changes don't seem to be working, do delete any cached view files you find, then re-build your changes.
 
 #### Testing the newly-Built Application
-Once you've successfully built your changes into the project's stand alone application binary, you have to test how this built application turned out.
-
-Simply, in any directoy of your choosing run the following:
+Once you've successfully built your changes, you have to test how it turned out. Simply, in the base of any Laravel project of your choosing run the following:
 ```
-<path-to-project-dir>/builds/dockerfile-laravel generate
+<path-to-dockerfile-laravel-dir>/builds/dockerfile-laravel generate
 ```
-
-And that's it! 
+And that's it! You should now see a fresh Dockerfile available for your project.
 
 ## Contribution
 
