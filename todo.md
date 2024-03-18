@@ -12,8 +12,6 @@ We can also take Docker setup ideas from the Rails/Node/Django setup in addition
 
 The intial work of this project will be to generate a Dockerfile template (blade?) via a CLI application that asks users for specific inputs and adjusts the resulting Dockerfile based on answers to that input.
 
-(Side note: It should ask if users want to overwrite any existing Dockerfile, and choose not to by default).
-
 The current "Gold Standard" and a good place to copy possible options/features is the Rails generator: https://github.com/fly-apps/dockerfile-rails
 
 ## Flyctl

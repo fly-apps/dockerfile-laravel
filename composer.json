@@ -14,6 +14,10 @@
         {
             "name": "Kathryn Anne Tan",
             "email": "kathryn@fly.io"
+        },
+        {
+            "name": "Sam Ruby",
+            "email": "rubys@fly.io"
         }
     ],
     "require": {},
@@ -23,6 +27,7 @@
         "pestphp/pest": "^2.22",
         "illuminate/view": "^10.0",
         "laravel-zero/framework": "^10.2",
+        "phpspec/php-diff": "^1.1",
         "nunomaduro/termwind": "^1.15.1"
     },
     "autoload": {
