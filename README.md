@@ -49,6 +49,15 @@ dockerfile-laravel generate
 
 And that should generate a Dockerfile at the current directory the command was run in.
 
+## Options
+
+  * `-o, --octane[=OCTANE]` - If using Octane, provide which flavor - one of: roadrunner, swoole, frankenphp
+  * `--no-assets` - Skip compiling static assets
+  * `--force` - Overwrite existing files
+  * `--skip` - Keep existing files
+
+The dockerfile generator accepts the following options:
+
 ### Testing out the Dockerfile
 With your Dockerfile generated, you should now be able to build this Dockerfile into a Docker image: 
 
