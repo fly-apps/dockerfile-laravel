@@ -32,7 +32,7 @@ class GenerateCommand extends Command
      */
     public function handle()
     {
-        // determine the default answer based on the options
+        // Determine the default answer on whether to overwrite existing file(s) based on the options.
         if ($this->option('force')) {
             $this->answer = 'a';
         } elseif ($this->option('skip')) {
@@ -41,20 +41,22 @@ class GenerateCommand extends Command
             $this->answer = '';
         }
 
-        // define the options available to the templates
+        // Define the options available to the templates.
         $options = [
             'octane' => $this->option('octane'),
             'build_assets' => ! $this->option('no-assets')
         ];
 
-        // define the list of templates to render
+        // Define the list of templates to render.
+        // The key is the template name, and the value is the output file name.
         $templates = [
             'dockerfile' => 'Dockerfile',
         ];
 
-        // ... add additional templates here, possibly based on scanning the source ...
+        // ... add additional templates here, possibly based on scanning the source,
+        // value if file_exists("fly.toml"), ...
 
-        // render each template
+        // Render each template. If any fail, return a failure status.
         foreach ($templates as $template => $output) {
             $r = $this->writeTemplateFile($template, $options, $output);
 
@@ -75,7 +77,7 @@ class GenerateCommand extends Command
      * @return bool
      */
     public function writeTemplateFile($template, $options, $output) {
-        // read the file before the change
+        // Read the file before the change. If it doesn't exist, assume it's empty.
         try {
             if (file_exists($output)) {
               $before = file($output, FILE_IGNORE_NEW_LINES);
@@ -90,23 +92,24 @@ class GenerateCommand extends Command
             $before = [];
         }
 
-        // render the template
+        // Render the template.
+        // Truncate the last line if it's empty as the before is read with FILE_IGNORE_NEW_LINES.
         $result = explode("\n", (string)view($template, $options));
         if (end($result) === '' && end($before) !== '') {
             array_pop($result);
         }
 
-        // write the file if it doesn't exist; if it has changed ask the user what to do
+        // Write the file if it doesn't exist; if it has changed ask the user what to do.
         if (empty($before)) {
-            echo $this->green(str_pad('create', 11, ' ', STR_PAD_BOTH)) . ' ' . $output . PHP_EOL;
+            $this->line('<fg=green>' . str_pad('create', 11, ' ', STR_PAD_BOTH) . '</> ' . $output);
             file_put_contents($output, implode("\n", $result) . "\n");
         } elseif ($before === $result) {
-            echo $this->blue(str_pad('identical', 11, ' ', STR_PAD_BOTH)) . ' ' . $output . PHP_EOL;
+            $this->line('<fg=blue>' . str_pad('identical', 11, ' ', STR_PAD_BOTH) . '</> ' . $output);
         } elseif ($this->answer === 'N') {
-            echo $this->blue(str_pad('skipped', 11, ' ', STR_PAD_BOTH)) . ' ' . $output . PHP_EOL;
+            $this->line('<fg=blue>' . str_pad('skipped', 11, ' ', STR_PAD_BOTH) . '</> ' . $output);
         } else {
             if ($this->answer !== 'a') {
-                echo $this->red(str_pad('conflict', 11, ' ', STR_PAD_BOTH)) . ' ' . $output . PHP_EOL;
+                $this->line('<fg=red>' . str_pad('conflict', 11, ' ', STR_PAD_BOTH) . '</> ' . $output);
             }
 
             while (true) {
@@ -116,7 +119,7 @@ class GenerateCommand extends Command
                 }
 
                 if ($this->answer === 'y' || $this->answer === '' || $this->answer === 'a') {
-                    echo $this->yellow(str_pad('forced', 11, ' ', STR_PAD_BOTH)) . ' ' . $output . PHP_EOL;
+                    $this->line('<fg=yellow>' . str_pad('forced', 11, ' ', STR_PAD_BOTH) . '</> ' . $output);
                     return file_put_contents($output, implode("\n", $result) . "\n");
                 } elseif ($this->answer === 'n') {
                     return true;
@@ -125,45 +128,28 @@ class GenerateCommand extends Command
                     $renderer = new \Diff_Renderer_Text_Unified();
                     foreach (explode("\n", $diff->render($renderer)) as $line) {
                         if (str_starts_with($line, '---') || str_starts_with($line, '+++')) {
-                            echo line . PHP_EOL;
+                            $this->line(line);
                         } elseif (str_starts_with($line, '@@')) {
-                            echo $this->blue($line) . PHP_EOL;
+                            $this->line('<fg=blue>' . $line . '</>');
                         } elseif (str_starts_with($line, '+')) {
-                            echo $this->green($line) . PHP_EOL;
+                            $this->line('<fg=green>' . $line . '</>');
                         } elseif (str_starts_with($line, '-')) {
-                            echo $this->red($line) . PHP_EOL;
+                            $this->line('<fg=red>' . $line . '</>');
                         } else {
-                            echo $line . PHP_EOL;
+                            $this->line($line);
                         }
                     }
                 } elseif ($this->answer === 'q') {
                     exit();
                 } else {
-                    echo '  Y - yes, overwrite' . PHP_EOL;
-                    echo '  n - no, do not overwrite' . PHP_EOL;
-                    echo '  a - all, overwrite this and all others' . PHP_EOL;
-                    echo '  q - quit, abort' . PHP_EOL;
-                    echo '  d - diff, show the differences between the old and the new' . PHP_EOL;
-                    echo '  h - help, show this help' . PHP_EOL;
+                    $this->line('  Y - yes, overwrite');
+                    $this->line('  n - no, do not overwrite');
+                    $this->line('  a - all, overwrite this and all others');
+                    $this->line('  q - quit, abort');
+                    $this->line('  d - diff, show the differences between the old and the new');
+                    $this->line('  h - help, show this help');
                 }
             }
         }
-    }
-
-    // Define the ANSI color functions
-    public function red($text) {
-        return "\033[31m{$text}\033[0m";
-    }
-
-    private function green($text) {
-        return "\033[32m{$text}\033[0m";
-    }
-
-    private function blue($text) {
-        return "\033[34m{$text}\033[0m";
-    }
-
-    private function yellow($text) {
-        return "\033[33m{$text}\033[0m";
     }
 }
