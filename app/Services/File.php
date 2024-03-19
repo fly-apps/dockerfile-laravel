@@ -11,13 +11,11 @@ class File
      */
     public function createFile( $output, $result )
     {
+    
         // Create the directory the file is supposed to be located in 
         if( strpos($output, '/') ){
-
-            // Everything before the last none item in the array is the path to the file
-            $parts = explode('/',$output); 
-            $end = end( $parts );
-            $pathToFile = rtrim( $output, $end );
+            // Get path to file
+            $pathToFile = dirname($output);
           
             // Recursively create directories
             if( !file_exists($pathToFile) )
