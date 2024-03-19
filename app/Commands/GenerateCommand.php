@@ -48,15 +48,12 @@ class GenerateCommand extends Command
             'laravel_version' => (new \App\Services\Scanner())->laravelVersion()
         ];
         
-
         // Define the list of templates to render.
         // The key is the template name, and the value is the output file name.
-        $templates = [
-            'dockerfile' => 'Dockerfile',
-        ];
 
         // ... add additional templates here, possibly based on scanning the source,
         // value if file_exists("fly.toml"), ...
+        $templates = (new \App\Services\Scanner())->templates();
 
         // Render each template. If any fail, return a failure status.
         foreach ($templates as $template => $output) {
@@ -66,7 +63,7 @@ class GenerateCommand extends Command
                 return Command::FAILURE;
             }
         }
-
+       
         return Command::SUCCESS;
     }
 
@@ -101,10 +98,13 @@ class GenerateCommand extends Command
             array_pop($result);
         }
 
+        // Helper for file-related functionalities, i.e. file creation
+        $fileHelper = (new \App\Services\File());
+
         // Write the file if it doesn't exist; if it has changed ask the user what to do.
         if (empty($before)) {
             $this->line('<fg=green>' . str_pad('create', 11, ' ', STR_PAD_BOTH) . '</> ' . $output);
-            file_put_contents($output, implode("\n", $result) . "\n");
+            $fileHelper->createFile( $output, $result );
         } elseif ($before === $result) {
             $this->line('<fg=blue>' . str_pad('identical', 11, ' ', STR_PAD_BOTH) . '</> ' . $output);
         } elseif ($this->answer === 'N') {
@@ -122,7 +122,7 @@ class GenerateCommand extends Command
 
                 if ($this->answer === 'y' || $this->answer === '' || $this->answer === 'a') {
                     $this->line('<fg=yellow>' . str_pad('forced', 11, ' ', STR_PAD_BOTH) . '</> ' . $output);
-                    return file_put_contents($output, implode("\n", $result) . "\n");
+                    return $fileHelper->createFile($output, $result);
                 } elseif ($this->answer === 'n') {
                     return true;
                 } elseif ($this->answer === 'd') {

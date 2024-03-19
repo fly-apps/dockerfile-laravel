@@ -3,26 +3,16 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Process;
 
-
+/**
+* This service scans configuration values for a Laravel project
+*/
 class Scanner
 {
     /**
-     * This service scans configuration values for a Laravel project
-     */
-
-     /**
-      * Scan for the Laravel version
-      */
+    * Scan for the Laravel version
+    */
     public function laravelVersion()
     {
-        // From the composer.json
-        if( file_exists('composer.json') ){
-            $composer = json_decode( file_get_contents('composer.json'), 1);
-            if( isset($composer['require']) && isset($composer['require']['laravel/framework']) ){
-                return trim( $composer['require']['laravel/framework'], '^');
-            }
-        }
-
         // From artisan command
         $run = Process::run( 'php artisan --version' );
         $version = $run->output();
@@ -34,4 +24,29 @@ class Scanner
         // Default Latest Version
         return  "11.0.0";
     }
+
+
+    /**
+     * Scans for templates to generate
+     * 
+     * @return array
+     *      key is template name, and the value is the output file name.
+     */
+    public function templates()
+    {
+        // Define the list of templates to render.
+        // The key is the template name, and the value is the output file name.
+        $templates = [
+            'dockerfile' => 'Dockerfile',
+        ];
+
+        // Scan for fly.io mark
+        if ( file_exists('fly.toml') ) {
+            $templates[ 'fly.dockerignore' ] = '.dockerignore';
+            $templates[ 'fly.entrypoint']    = '.fly/entrypoint.sh';
+            $templates[ 'fly.scripts.caches'] = '.fly/scripts/caches.sh';
+        }
+
+        return $templates;
+    }    
 }
