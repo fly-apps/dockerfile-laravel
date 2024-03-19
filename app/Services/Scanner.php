@@ -48,5 +48,5 @@ class Scanner
         }
 
         return $templates;
-    }    
+    }
 }
