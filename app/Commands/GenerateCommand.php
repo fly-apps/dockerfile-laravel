@@ -17,7 +17,7 @@ class GenerateCommand extends Command
                             {--no-assets : Skip compiling static assets}
                             {--force : Overwrite existing files}
                             {--skip : Keep existing files}
-                            {--prod : Ready for deployment to production}';
+                            {--dev : Include dev dependencies like the local .env file}';
 
     /**
      * The description of the command.
@@ -46,8 +46,8 @@ class GenerateCommand extends Command
         $options = [
             'octane' => $this->option('octane'),
             'build_assets' => ! $this->option('no-assets'),
+            'dev' => $this->option('dev'),
             'laravel_version' => (new \App\Services\Scanner())->laravelVersion(),
-            'production_ready' => ($this->option('prod')? $this->option('prod') : false)
         ];
         
         // Define the list of templates to render.
