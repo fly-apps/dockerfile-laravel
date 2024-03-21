@@ -3,7 +3,6 @@
     "description": "Dockerfile generator and Fly.io helper.",
     "keywords": ["fly.io", "laravel", "docker", "dockerfile", "generate","cli"],
     "homepage": "https://fly.io/docs/laravel",
-    "version": "1.0.0",
     "type": "project",
     "license": "MIT",
     "authors": [
