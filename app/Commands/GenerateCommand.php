@@ -15,8 +15,9 @@ class GenerateCommand extends Command
     protected $signature = 'generate
                             {--o|octane= : If using Octane, provide which flavor - one of: roadrunner, swoole, frankenphp}
                             {--no-assets : Skip compiling static assets}
-                            {--force : overwrite existing files}
-                            {--skip : keep existing files}';
+                            {--force : Overwrite existing files}
+                            {--skip : Keep existing files}
+                            {--dev : Include dev dependencies like the local .env file}';
 
     /**
      * The description of the command.
@@ -45,7 +46,8 @@ class GenerateCommand extends Command
         $options = [
             'octane' => $this->option('octane'),
             'build_assets' => ! $this->option('no-assets'),
-            'laravel_version' => (new \App\Services\Scanner())->laravelVersion()
+            'dev' => $this->option('dev'),
+            'laravel_version' => (new \App\Services\Scanner())->laravelVersion(),
         ];
         
         // Define the list of templates to render.
