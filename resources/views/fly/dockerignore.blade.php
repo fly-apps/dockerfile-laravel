@@ -7,7 +7,9 @@ storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
 storage/logs/*
+@if( !$dev )
 *.env*
+@endif
 .rr.yml
 rr
 frankenphp

@@ -55,6 +55,7 @@ And that should generate a Dockerfile at the current directory the command was r
   * `--no-assets` - Skip compiling static assets
   * `--force` - Overwrite existing files
   * `--skip` - Keep existing files
+  * `--dev` - Include dev dependencies in the creation of the image, i.e. the local .env file
 
 The dockerfile generator accepts the following options:
 
