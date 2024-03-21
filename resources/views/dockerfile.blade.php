@@ -17,19 +17,12 @@ RUN composer install --optimize-autoloader --no-dev \
     && mkdir -p storage/logs \
     && php artisan optimize:clear \
     && chown -R www-data:www-data /var/www/html \
-    && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run" > /etc/cron.d/laravel; \
-    if [ -d .fly ]; then cp .fly/entrypoint.sh /entrypoint; chmod +x /entrypoint; fi;
-
-# Different syntax for Laravel 11 and previous versions 
-# For setting TrustProxies
-@if( preg_match("~\^|^1[1-9]~", $laravel_version ) )
-RUN sed -i='' '/->withMiddleware(function (Middleware \$middleware) {/a\
+    && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run" > /etc/cron.d/laravel \
+    @if( preg_match("~\^|^1[1-9]~", $laravel_version ) )&& sed -i='' '/->withMiddleware(function (Middleware \$middleware) {/a\
         \$middleware->trustProxies(at: "*");\
-' bootstrap/app.php;
-@else
-RUN sed -i 's/protected \$proxies/protected \$proxies = "*"/g' app/Http/Middleware/TrustProxies.php
-@endif
-
+    ' bootstrap/app.php; \ 
+    @else&& sed -i 's/protected \$proxies/protected \$proxies = "*"/g' app/Http/Middleware/TrustProxies.php;\ @endif
+if [ -d .fly ]; then cp .fly/entrypoint.sh /entrypoint; chmod +x /entrypoint; fi;
 
 @if(in_array($octane, ['frankenphp', 'roadrunner', 'swoole']))
 @include('octane-'.$octane)
