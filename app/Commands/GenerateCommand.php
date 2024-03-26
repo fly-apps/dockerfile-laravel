@@ -42,20 +42,21 @@ class GenerateCommand extends Command
             $this->answer = '';
         }
 
+        // Scanner
+        $scan = (new \App\Services\Scanner());
+
         // Define the options available to the templates.
         $options = [
             'octane' => $this->option('octane'),
             'build_assets' => ! $this->option('no-assets'),
             'dev' => $this->option('dev'),
-            'laravel_version' => (new \App\Services\Scanner())->laravelVersion(),
+            'laravel_version' => $scan->laravelVersion(),
+            'fly' => $scan->isForFly(),
         ];
         
         // Define the list of templates to render.
         // The key is the template name, and the value is the output file name.
-
-        // ... add additional templates here, possibly based on scanning the source,
-        // value if file_exists("fly.toml"), ...
-        $templates = (new \App\Services\Scanner())->templates();
+        $templates = $scan->templates( $options );
 
         // Render each template. If any fail, return a failure status.
         foreach ($templates as $template => $output) {

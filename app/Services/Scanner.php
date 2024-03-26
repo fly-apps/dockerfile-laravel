@@ -25,14 +25,26 @@ class Scanner
         return  "11.0.0";
     }
 
+    /**
+     * Scan directory and check if applicable for Fly.io deployment
+     */
+    public function isForFly()
+    {
+        if ( file_exists('fly.toml') ) 
+            return true;
+        else
+            return false;
+    }
+
 
     /**
-     * Scans for templates to generate
+     * Lists templates to generate based on options passed
      * 
+     * @param array $options
      * @return array
      *      key is template name, and the value is the output file name.
      */
-    public function templates()
+    public function templates( array $options )
     {
         // Define the list of templates to render.
         // The key is the template name, and the value is the output file name.
@@ -41,7 +53,7 @@ class Scanner
         ];
 
         // Scan for fly.io mark
-        if ( file_exists('fly.toml') ) {
+        if ( $options['fly'] ) {
             $templates[ 'fly.dockerignore' ] = '.dockerignore';
             $templates[ 'fly.entrypoint']    = '.fly/entrypoint.sh';
             $templates[ 'fly.scripts.caches'] = '.fly/scripts/caches.sh';
@@ -49,4 +61,6 @@ class Scanner
 
         return $templates;
     }
+
+    
 }
