@@ -21,12 +21,10 @@ function getTestOptions( string $directory ): string
 }
 
 // Test that supported combinations' templates are successfully generated
-it('generates the proper templates', function ( ) 
+it('generates proper templates for each supported combination', function ( ) 
 {
-
     $directories = \File::directories( 'tests/Feature/Supported' );   
     foreach($directories as $dir) { 
-
         // Detect options from composer.json
         $options = getTestOptions( $dir );
 
@@ -37,7 +35,6 @@ it('generates the proper templates', function ( )
         // Compare expected files from test directory with generated files
         $referenceFiles = \File::files( $dir );   
         foreach( $referenceFiles as $reference ){ 
-
             $failedForMsg = 'Failed for: "'.$reference->getPathName().'"';
 
             if( $reference->getFileName() == 'composer.json' ) continue;
