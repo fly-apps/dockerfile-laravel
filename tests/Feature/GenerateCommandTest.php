@@ -21,38 +21,40 @@ function getTestOptions( string $directory ): string
 }
 
 // Test that supported combinations' templates are successfully generated
-it('generates the proper templates', function ( ) {
+it('generates the proper templates', function ( ) 
+{
 
     $directories = \File::directories( 'tests/Feature/Supported' );   
-    foreach($directories as $path) { 
+    foreach($directories as $dir) { 
 
         // Detect options from composer.json
-        $options = getTestOptions( $path );
+        $options = getTestOptions( $dir );
 
         // Generate Dockerfile using options
-        // First assert: successfully runs
+        // First assert: command successfully runs and exits
         $this->artisan('generate '.$options)->assertExitCode(0);
 
-        // Compare expected files with generated files
-        $expectedFiles = \File::files( $path );   
-        foreach( $expectedFiles as $file ){ 
+        // Compare expected files from test directory with generated files
+        $referenceFiles = \File::files( $dir );   
+        foreach( $referenceFiles as $reference ){ 
 
-            if( $file->getFileName() == 'composer.json' ) continue;
+            $failedForMsg = 'Failed for: "'.$reference->getPathName().'"';
 
-            // Second assert: expected file was generated
-            $this->assertFileExists( $file->getFileName() );
+            if( $reference->getFileName() == 'composer.json' ) continue;
 
-            // Get contents
-            $expected  = file_get_contents( $file->getPathName() ); // expected file full path
-            $generated = file_get_contents( $file->getFileName() ); // gen file is expected file's name in current dir
+            // Second assert: a new file with the reference file's name was created-it should exist!
+            $this->assertFileExists( $reference->getFileName(), $failedForMsg );
+
+            // Get contents i.e. /10_base/Dockerfile vs Dockerfile
+            $expected  = file_get_contents( $reference->getPathName() ); // expected content from reference file
+            $generated = file_get_contents( $reference->getFileName() ); // new file content
 
             // Clean UP: Delete generated file, no longer needed
-            unlink( $file->getFileName() );
+            unlink( $reference->getFileName() );
 
             // Third assert: contents are the same
                 // TODO: ignore different ARG VALUES
-            $this->assertEquals( $expected, $generated, 
-                'Comparison unsuccessful for: "'.$file->getPathName() .'"'); 
+            $this->assertEquals( $expected, $generated, $failedForMsg); 
         }
     }    
 });
