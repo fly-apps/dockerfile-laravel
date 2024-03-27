@@ -11,16 +11,19 @@ class Scanner
     /**
     * Scan for the Laravel version
     */
-    public function laravelVersion()
+    public function laravelVersion( $options )
     {
-        // From artisan command
         $run = Process::run( 'php artisan --version' );
         $version = $run->output();
         $version = explode('Laravel Framework', $version);
         if( count($version) >1 ){
+            // From artisan command
             return trim($version[1]);
+        }else if( isset( $options['laravel-version']) && !empty($options['laravel-version']) ){
+            // From options
+            return  trim( $options['laravel-version'], '^' );
         }
-
+        
         // Default Latest Version
         return  "11.0.0";
     }

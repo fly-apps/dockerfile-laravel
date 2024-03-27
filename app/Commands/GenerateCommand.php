@@ -17,7 +17,8 @@ class GenerateCommand extends Command
                             {--no-assets : Skip compiling static assets}
                             {--force : Overwrite existing files}
                             {--skip : Keep existing files}
-                            {--dev : Include dev dependencies like the local .env file}';
+                            {--dev : Include dev dependencies like the local .env file}
+                            {--laravel-version= : Set the laravel version}';
 
     /**
      * The description of the command.
@@ -50,7 +51,7 @@ class GenerateCommand extends Command
             'octane' => $this->option('octane'),
             'build_assets' => ! $this->option('no-assets'),
             'dev' => $this->option('dev'),
-            'laravel_version' => $scan->laravelVersion(),
+            'laravel_version' => $scan->laravelVersion( $this->options() ),
             'fly' => $scan->isForFly(),
         ];
         
