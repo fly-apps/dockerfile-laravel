@@ -29,6 +29,32 @@ class Scanner
     }
 
     /**
+     * Detect octane setup and flavor 
+     */
+    public function octaneFlavor( array $options )
+    {
+        // TODO: OCTANE which laravel versions are actually compatible? 11
+        $composerContent = (new \App\Services\File())->composerJsonContent( '.' );
+        $octane = false;
+
+        if(isset($composerContent['require']) &&  isset( $composerContent['require']['laravel/octane'] ) ){
+
+            $require = $composerContent['require'];
+
+            // Determine flavor
+            if( file_exists('frankenphp') ){
+                return 'frankenphp';
+            }else if(  file_exists( 'rr' ) && file_exists( '.rr.yaml') ){
+                return 'roadrunner';
+            }else{
+                return 'swoole';
+            }
+
+        }
+        return $options['octane'];
+    }
+
+    /**
      * Scan directory and check if applicable for Fly.io deployment
      */
     public function isForFly()

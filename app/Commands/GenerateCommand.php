@@ -48,7 +48,7 @@ class GenerateCommand extends Command
 
         // Define the options available to the templates.
         $options = [
-            'octane' => $this->option('octane'),
+            'octane' => $scan->octaneFlavor( $this->options() ),
             'build_assets' => ! $this->option('no-assets'),
             'dev' => $this->option('dev'),
             'laravel_version' => $scan->laravelVersion( $this->options() ),

@@ -1,8 +1,7 @@
 <?php
 function getTestOptions( string $directory ): string 
 {
-    $composerFile    = $directory.'/composer.json';
-    $composerContent = json_decode( file_get_contents( $composerFile ), 1 );
+    $composerContent = (new \App\Services\File())->composerJsonContent( $directory );
     $composerConfig  = $composerContent['require'];
     
     // Matches with options for in App\Commands\GenerateCommand::generate() command
