@@ -1,0 +1,4 @@
+[2024-04-01 17:29:21] development.ERROR: Declaration of LaravelZero\Framework\Commands\BuildCommand::handleSignal(int $signal): int|false must be compatible with Symfony\Component\Console\Command\SignalableCommandInterface::handleSignal(int $signal, int|false $previousExitCode = 0): int|false {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Declaration of LaravelZero\\Framework\\Commands\\BuildCommand::handleSignal(int $signal): int|false must be compatible with Symfony\\Component\\Console\\Command\\SignalableCommandInterface::handleSignal(int $signal, int|false $previousExitCode = 0): int|false at /home/admin_kath/development/projects/dockerfile-laravel/vendor/laravel-zero/framework/src/Commands/BuildCommand.php:84)
+[stacktrace]
+#0 {main}
+"} 

@@ -33,12 +33,16 @@ class Scanner
      */
     public function octaneFlavor( array $options )
     {
-        // TODO: OCTANE which laravel versions are actually compatible? 11
+        // Octane is not supported for laravel versions below v8
+        if( intval($options['laravel_version']) < 8 ){
+            return null;
+        }
+
         $composerContent = (new \App\Services\File())->composerJsonContent( '.' );
         $octane = false;
 
-        if(isset($composerContent['require']) &&  isset( $composerContent['require']['laravel/octane'] ) ){
-
+        // Detect octane from composer.json
+        if( isset($composerContent['require']) && isset( $composerContent['require']['laravel/octane'] ) ){
             $require = $composerContent['require'];
 
             // Determine flavor
@@ -49,7 +53,6 @@ class Scanner
             }else{
                 return 'swoole';
             }
-
         }
         return $options['octane'];
     }

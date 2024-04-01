@@ -48,13 +48,14 @@ class GenerateCommand extends Command
 
         // Define the options available to the templates.
         $options = [
-            'octane' => $scan->octaneFlavor( $this->options() ),
             'build_assets' => ! $this->option('no-assets'),
             'dev' => $this->option('dev'),
+            'octane' => $this->option('octane'),
             'laravel_version' => $scan->laravelVersion( $this->options() ),
             'fly' => $scan->isForFly(),
         ];
-        
+        $options['octane'] = $scan->octaneFlavor( $options );
+
         // Define the list of templates to render.
         // The key is the template name, and the value is the output file name.
         $templates = $scan->templates( $options );
