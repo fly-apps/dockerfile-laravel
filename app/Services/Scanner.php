@@ -13,17 +13,20 @@ class Scanner
     */
     public function laravelVersion( $options )
     {
-        $run = Process::run( 'php artisan --version' );
-        $version = $run->output();
-        $version = explode('Laravel Framework', $version);
-        if( count($version) >1 ){
-            // From artisan command
-            return trim($version[1]);
-        }else if( isset( $options['laravel-version']) && !empty($options['laravel-version']) ){
+        if( isset( $options['laravel-version']) && !empty($options['laravel-version']) ){
             // From options
             return  trim( $options['laravel-version'], '^' );
+        }else{
+            // From detection
+            $run = Process::run( 'php artisan --version' );
+            $version = $run->output();
+            $version = explode('Laravel Framework', $version);
+            if( count($version) >1 ){
+                // From artisan command
+                return trim($version[1]);
+            }
         }
-        
+
         // Default Latest Version
         return  "11.0.0";
     }
@@ -38,7 +41,6 @@ class Scanner
 
         // Detect octane from composer.json
         if( isset($composerContent['require']) && isset( $composerContent['require']['laravel/octane'] ) ){
-            $require = $composerContent['require'];
     
             // Determine flavor
             if( file_exists( $options['path'].'/frankenphp') ){

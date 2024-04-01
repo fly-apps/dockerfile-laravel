@@ -51,7 +51,6 @@ class GenerateCommand extends Command
         $options = [
             'build_assets' => ! $this->option('no-assets'),
             'dev' => $this->option('dev'),
-            'octane' => $this->option('octane'),
             'laravel_version' => $scan->laravelVersion( $this->options() ),
             'fly' => $scan->isForFly(),
             'octane' => $scan->octaneFlavor( $this->options() )
