@@ -55,12 +55,13 @@ it('generates proper templates for each supported combination', function ( )
             $expected  = file_get_contents( $reference->getPathName() ); // expected content from reference file
             $generated = file_get_contents( $reference->getFileName() ); // new file content
 
-            // Clean UP: Delete generated file, no longer needed
-            unlink( $reference->getFileName() );
-
             // Third assert: contents are the same
                 // TODO: ignore different ARG VALUES
             $this->assertEquals( $expected, $generated, $failedForMsg); 
+
+            // Clean UP: Delete generated file, no longer needed
+            unlink( $reference->getFileName() );
+
         }
     }    
 });
