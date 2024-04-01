@@ -33,22 +33,17 @@ class Scanner
      */
     public function octaneFlavor( array $options )
     {
-        // Octane is not supported for laravel versions below v8
-        if( intval($options['laravel_version']) < 8 ){
-            return null;
-        }
-
-        $composerContent = (new \App\Services\File())->composerJsonContent( '.' );
+        $composerContent = (new \App\Services\File())->composerJsonContent( $options['path'] );
         $octane = false;
 
         // Detect octane from composer.json
         if( isset($composerContent['require']) && isset( $composerContent['require']['laravel/octane'] ) ){
             $require = $composerContent['require'];
-
+    
             // Determine flavor
-            if( file_exists('frankenphp') ){
+            if( file_exists( $options['path'].'/frankenphp') ){
                 return 'frankenphp';
-            }else if(  file_exists( 'rr' ) && file_exists( '.rr.yaml') ){
+            }else if(  file_exists(  $options['path'].'/rr' ) && file_exists(  $options['path'].'/.rr.yaml') ){
                 return 'roadrunner';
             }else{
                 return 'swoole';

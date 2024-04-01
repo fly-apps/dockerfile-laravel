@@ -18,7 +18,8 @@ class GenerateCommand extends Command
                             {--force : Overwrite existing files}
                             {--skip : Keep existing files}
                             {--dev : Include dev dependencies like the local .env file}
-                            {--laravel-version= : Set the laravel version}';
+                            {--laravel-version= : Set the laravel version}
+                            {--path=. : Set the directory to check files in.}';
 
     /**
      * The description of the command.
@@ -53,8 +54,8 @@ class GenerateCommand extends Command
             'octane' => $this->option('octane'),
             'laravel_version' => $scan->laravelVersion( $this->options() ),
             'fly' => $scan->isForFly(),
-        ];
-        $options['octane'] = $scan->octaneFlavor( $options );
+            'octane' => $scan->octaneFlavor( $this->options() )
+        ];     
 
         // Define the list of templates to render.
         // The key is the template name, and the value is the output file name.
