@@ -26,4 +26,13 @@ class File
         // Create the file, finally!
         return file_put_contents($output, implode("\n", $result) . "\n");
     }
+
+    public function composerJsonContent( $directory )
+    {
+        $path = $directory.'/composer.json';
+
+        if( !file_exists( $path ) ) return [];
+        
+        return json_decode( file_get_contents( $path ), 1 );
+    }
 }

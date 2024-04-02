@@ -13,19 +13,45 @@ class Scanner
     */
     public function laravelVersion( $options )
     {
-        $run = Process::run( 'php artisan --version' );
-        $version = $run->output();
-        $version = explode('Laravel Framework', $version);
-        if( count($version) >1 ){
-            // From artisan command
-            return trim($version[1]);
-        }else if( isset( $options['laravel-version']) && !empty($options['laravel-version']) ){
+        if( isset( $options['laravel-version']) && !empty($options['laravel-version']) ){
             // From options
             return  trim( $options['laravel-version'], '^' );
+        }else{
+            // From detection
+            $run = Process::run( 'php artisan --version' );
+            $version = $run->output();
+            $version = explode('Laravel Framework', $version);
+            if( count($version) >1 ){
+                // From artisan command
+                return trim($version[1]);
+            }
         }
-        
+
         // Default Latest Version
         return  "11.0.0";
+    }
+
+    /**
+     * Detect octane setup and flavor 
+     */
+    public function octaneFlavor( array $options )
+    {
+        $composerContent = (new \App\Services\File())->composerJsonContent( $options['path'] );
+        $octane = false;
+
+        // Detect octane from composer.json
+        if( isset($composerContent['require']) && isset( $composerContent['require']['laravel/octane'] ) ){
+    
+            // Determine flavor
+            if( file_exists( $options['path'].'/frankenphp') ){
+                return 'frankenphp';
+            }else if(  file_exists(  $options['path'].'/rr' ) && file_exists(  $options['path'].'/.rr.yaml') ){
+                return 'roadrunner';
+            }else{
+                return 'swoole';
+            }
+        }
+        return $options['octane'];
     }
 
     /**

@@ -1,0 +1,6 @@
+{
+    "require": {
+        "laravel/framework": "^10.0.0",
+        "laravel/octane" : "*"
+    }
+}
