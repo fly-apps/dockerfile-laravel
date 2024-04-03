@@ -55,6 +55,22 @@ class Scanner
     }
 
     /**
+     * Detect filament declaration and version
+     */
+    public function filamentVersion( array $options )
+    {
+        // Composer json contains filament requirement
+        $composerContent = (new \App\Services\File())->composerJsonContent( $options['path'] );
+
+        // Extract version
+        if( isset( $composerContent['require'] ) && isset($composerContent['require']['filament/filament']) ){
+            return trim($composerContent['require']['filament/filament'], '^'); 
+        }else{
+            return false;
+        }
+    }
+
+    /**
      * Scan directory and check if applicable for Fly.io deployment
      */
     public function isForFly()

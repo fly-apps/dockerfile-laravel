@@ -18,25 +18,13 @@ RUN composer install --optimize-autoloader --no-dev \
     && php artisan optimize:clear \
     && chown -R www-data:www-data /var/www/html \
     && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run" > /etc/cron.d/laravel \
-@if( preg_match("~\^|^1[1-9]~", $laravel_version ) )
-    && sed -i='' '/->withMiddleware(function (Middleware \$middleware) {/a\
-        \$middleware->trustProxies(at: "*");\
-    ' bootstrap/app.php; \ 
-@else
     && sed -i 's/protected \$proxies/protected \$proxies = "*"/g' app/Http/Middleware/TrustProxies.php;\
-@endif
     if [ -d .fly ]; then cp .fly/entrypoint.sh /entrypoint; chmod +x /entrypoint; fi;
 
-@if(in_array($octane, ['frankenphp', 'roadrunner', 'swoole']))
-@include('octane-'.$octane)
-@endif
 
-@if( $filament && intval($filament) >= 3 )
 # If we're using Filament v3 and above, run caching commands...
 RUN  php artisan icons:cache && php artisan filament:cache-components
-@endif
 
-@if($build_assets)
 # Multi-stage build: Build static assets
 # This allows us to not include Node within the final container
 FROM node:${NODE_VERSION} as node_modules_go_brrr
@@ -84,6 +72,5 @@ COPY --from=node_modules_go_brrr /app/public /var/www/html/public-npm
 RUN rsync -ar /var/www/html/public-npm/ /var/www/html/public/ \
     && rm -rf /var/www/html/public-npm \
     && chown -R www-data:www-data /var/www/html/public
-@endif
 
 EXPOSE 8080
