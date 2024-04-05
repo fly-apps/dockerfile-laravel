@@ -13,20 +13,21 @@ class Scanner
     */
     public function laravelVersion( $options )
     {
-        if( isset( $options['laravel-version']) && !empty($options['laravel-version']) ){
-            // From options
-            return  trim( $options['laravel-version'], '^' );
+        // From detection
+        $run = Process::run( 'php artisan --version' );
+        $version = $run->output();
+        $version = explode('Laravel Framework', $version);
+        if( count($version) >1 ){
+            // From artisan command
+            return trim($version[1]);
         }else{
-            // From detection
-            $run = Process::run( 'php artisan --version' );
-            $version = $run->output();
-            $version = explode('Laravel Framework', $version);
-            if( count($version) >1 ){
-                // From artisan command
-                return trim($version[1]);
+            // From composer.json
+            $composerContent = (new \App\Services\File())->composerJsonContent( $options['path'] );
+            if( isset($composerContent['require']) && isset($composerContent['require']['laravel/framework']) ){
+                return trim($composerContent['require']['laravel/framework'],'^');
             }
         }
-
+        
         // Default Latest Version
         return  "11.0.0";
     }

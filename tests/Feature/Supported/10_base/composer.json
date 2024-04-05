@@ -1,6 +1,5 @@
 {
     "require": {
-        "laravel/framework": "^10.10",
-        "filament/filament": "^2.0.0"
+        "laravel/framework": "^10.10"
     }
 }
