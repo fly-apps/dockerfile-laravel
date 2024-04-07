@@ -8,7 +8,7 @@ function ignoreFiles( )
 /**
  * Sets up a test directory containing files combining base and snippet configuration:
  *  new composer json with merged details from base and snippet directories
- *  supporting files from base directory being tested
+ *  supporting files from base directory being tested( like rr.yaml, frankenphp binaries that are needed to detect the flavor of octane )
  * */
 function setUpDirectoryForBaseSnippetCombo( $baseDirectory, $newComposerArr, $testDir )
 {
@@ -40,9 +40,7 @@ function setUpDirectoryForBaseSnippetCombo( $baseDirectory, $newComposerArr, $te
     }
 }
 
-// Test that Dockerfiles are generated properly for specific "base specifications"
-// Base specifications can include "Laravel version", "Octane flavor"--specifications that would require different config, that will not work in harmony with all other bases.
-// For example. 
+// Test that expected files are generated properly for specific "base specifications"
 it('generates proper templates for each supported base', function ( ) 
 {
     $directories = \File::directories( 'tests/Feature/Supported' );   
@@ -85,7 +83,7 @@ it('generates proper templates for each supported base', function ( )
     }    
 });
 
-// Tests whether snippets are added into generated files for special occasions/configurations
+// Tests whether snippets are added into generated files for special configurations
 it('generates templates with proper snippets', function () 
 {
     // Folders providing details that can combined with Base test directories

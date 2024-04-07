@@ -123,9 +123,27 @@ Once you've successfully built your changes, you have to test how it turned out.
 ```
 And that's it! You should now see a fresh Dockerfile available for your project.
 
-## Contribution
+## Test Cases
+There are two general purpose test cases in `tests/Feature/GenerateCommandTest.php`:
 
-Once you've cooked up and tested your local changes, you can make a Pull Request to include it in this repository. 
+1. `generates proper templates for each supported base` 
+- Tests that generated files match their references found in the `tests/Feature/Supported` folder.
+- Each sub folder in this folder contains:
+  - Configuration files like `composer.json`, or other binaries, used by the `generate` command to detect and determine how files are generated
+  - Reference files are files containing the expected contents of files generated from the `generate` command, i.e., a Dockerfile 
+
+2. `generates templates with proper snippets`
+- Tests that specific "snippets" are properly included in specific generated files for special occassions/package support. These snippets expectations are found in `tests/Feature/Snippets` folder.
+- Each sub folder in this folder contains:
+  - Configuration file: their respective `composer.json` file. Which, when combined with the composer.json files of base sub folders found in `tests/Feature/Supported` folder, should cause specific generated files to contain additional "snippets". Their composer.json file contains an additional custom key: `extra.templates` that lets the test know which specific generated files to test
+  - Reference files: files that match the names found in `extra.templates`, and contain the actual snippet expected to be added in that specific template that is generated.
+- Each sub folder in this folder are combined and tested with all sub folders under `tests/Feature/Supported`. This is because their identified snippets are expected to work with all the "base" configurations found in the `Supported` subfolder.
+
+These test cases are used to test new changes would not break existing features of the `generate` command. These can be run through `./vendor/bin/pest`.
+
+
+## Contribution
+Once you've cooked up and tested your local changes, make sure you add a test for them, and then you can make a Pull Request to request its inclusion in this repository. 
 
 Of course, you don't have to create a PR. If there are any feature or bug that makes sense for the repository, you can also create an Issue about it. 
 
