@@ -139,11 +139,11 @@ There are two general purpose test cases in `tests/Feature/GenerateCommandTest.p
   - Reference files: files that match the names found in `extra.templates`, and contain the actual snippet expected to be added in that specific template that is generated.
 - Each sub folder in this folder are combined and tested with all sub folders under `tests/Feature/Supported`. This is because their identified snippets are expected to work with all the "base" configurations found in the `Supported` subfolder.
 
-These test cases are used to test new changes would not break existing features of the `generate` command. These can be run through `./vendor/bin/pest`.
+These test cases are used to make sure new changes would not break existing features of the `generate` command. These can be run through `./vendor/bin/pest`.
 
 
 ## Contribution
-Once you've cooked up and tested your local changes, make sure you add a test for them, and then you can make a Pull Request to request its inclusion in this repository. 
+Once you've cooked up and tested your local changes, you can make a Pull Request to request its inclusion in this repository. ( BONUS points if you add a test case for your change! )
 
 Of course, you don't have to create a PR. If there are any feature or bug that makes sense for the repository, you can also create an Issue about it. 
 
