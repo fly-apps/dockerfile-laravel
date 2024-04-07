@@ -5,57 +5,74 @@ function ignoreFiles( )
     return ['composer.json','frankenphp','rr','.rr.yaml'];
 }
 
-function getTestOptions( string $directory ): string 
+/**
+ * Sets up a test directory containing files combining base and snippet configuration:
+ *  new composer json with merged details from base and snippet directories
+ *  supporting files from base directory being tested( like rr.yaml, frankenphp binaries that are needed to detect the flavor of octane )
+ * */
+function setUpDirectoryForBaseSnippetCombo( $baseDirectory, $newComposerArr, $testDir )
 {
-    $composerContent = (new \App\Services\File())->composerJsonContent( $directory );
-    $composerConfig  = $composerContent['require'];
-    
-    // Matches with options for in App\Commands\GenerateCommand::generate() command
-    $optionsToCheck = [ 
-        'laravel/framework' => 'laravel-version',
-    ];
+    // Delete any previous combination folder
+    if( is_dir($testDir) ){
+        $fh = new \App\Services\File();
+        $fh->deleteDir($testDir);
+    }
 
-    // Gather options
-    $optionsFound = '';
-    foreach( $optionsToCheck as $key => $option ){
-        if( isset($composerConfig[$key]) ){
-            $optionsFound .= '--'.$option.'="'.$composerConfig[$key].'" ';
+    // Create combination directory
+    mkdir($testDir);
+
+    // Create new composer file using merged content
+    file_put_contents( $testDir.'/composer.json', json_encode($newComposerArr, JSON_UNESCAPED_SLASHES));
+    
+    // Copy over supporting files from base directory to test directory
+    $supportingFileNames = ignoreFiles(); 
+    foreach( $supportingFileNames as $name ){
+        $pathToBaseFile = $baseDirectory.'/'.$name;       
+        if( file_exists($pathToBaseFile) ){
+            $pathToTestFile = $testDir.'/'.$name;
+            if( !file_exists($pathToTestFile) ){
+                file_put_contents( 
+                    $pathToTestFile,
+                    file_get_contents($pathToBaseFile)
+                );
+            }     
         }
     }
-    
-    // Set directory to check files in 
-    $optionsFound .= '--path="'.$directory.'"';
-
-    return $optionsFound;
 }
 
-// Test that supported combinations' templates are successfully generated
-it('generates proper templates for each supported combination', function ( ) 
+// Test that expected files are generated properly for specific "base specifications"
+it('generates proper templates for each supported base', function ( ) 
 {
     $directories = \File::directories( 'tests/Feature/Supported' );   
-    foreach($directories as $dir) { 
-        // Detect options from composer.json
-        $options = getTestOptions( $dir );
+    foreach($directories as $dir) {
+        #if( $dir != "tests/Feature/Supported/10_base" ) continue;//-- revise and uncomment this line if you want to test out a specific Support subfolder
 
-        // Generate Dockerfile using options
-        // First assert: command successfully runs and exits
-        $this->artisan('generate '.$options)->assertExitCode(0);
+        // Generate Dockerfile, by scanning contents of files in the current directory, set through --path
+        // FIRST assert: command successfully runs and exits
+        $this->artisan('generate --path="'.$dir.'"')->assertExitCode(0);
 
-        // Compare expected files from test directory with generated files
+        // Compare reference files from test directory with generated files
         $referenceFiles = \File::files( $dir );   
         foreach( $referenceFiles as $reference ){ 
             $failedForMsg = 'Failed for: "'.$reference->getPathName().'"';
 
+            // Skip if a setup file
             if( in_array( $reference->getFileName(), ignoreFiles())  ) continue;
 
-            // Second assert: a new file with the reference file's name was created-it should exist!
+            // SECOND assert: a new file with the reference file's name was created; it should exist!
             $this->assertFileExists( $reference->getFileName(), $failedForMsg );
+            
+            // Contents of generated file
+            $generated = file_get_contents( $reference->getFileName() );
 
-            // Get contents i.e. /10_base/Dockerfile vs Dockerfile
-            $expected  = file_get_contents( $reference->getPathName() ); // expected content from reference file
-            $generated = file_get_contents( $reference->getFileName() ); // new file content
+            // Override the reference file with generated file content if needed; PLEASE double check diff and re-test this new ref manually!
+            if( env('OVERRIDE_TEST_REFERENCES')===true )
+                file_put_contents( $reference->getPathName(), $generated );
 
-            // Third assert: contents are the same
+            // Contents of reference file
+            $expected = file_get_contents( $reference->getPathName() ); 
+
+            // THIRD assert: contents are the same
                 // TODO: ignore different ARG VALUES
             $this->assertEquals( $expected, $generated, $failedForMsg); 
 
@@ -63,6 +80,76 @@ it('generates proper templates for each supported combination', function ( )
             unlink( $reference->getFileName() );
 
         }
+    }    
+});
+
+// Tests whether snippets are added into generated files for special configurations
+it('generates templates with proper snippets', function () 
+{
+    // Folders providing details that can combined with Base test directories
+    $extDirectories = \File::directories( 'tests/Feature/Snippets' );
+    // Base test directories
+    $baseDirectories = \File::directories( 'tests/Feature/Supported' );   
+
+    foreach($baseDirectories as $base) {
+        // composer.json of base directory 
+        $baseComposer = (new \App\Services\File())->composerJsonContent( $base );
+       
+        foreach( $extDirectories as $ext ){
+            // composer.json of snippet directory 
+            $extComposer = (new \App\Services\File())->composerJsonContent( $ext );
+
+            // Merge composer together
+            $newComposer = [
+                'require' => array_merge( $extComposer['require'], $baseComposer['require'] )
+            ];
+
+            // Create new test directory for the base+snippet combination
+            $testDir = 'tests/Feature/Combination';
+            setUpDirectoryForBaseSnippetCombo( $base, $newComposer, $testDir );
+
+            // Generate templates, by scanning contents of files in the combination folder
+            // FIRST assert: command successfully runs and exits
+            $this->artisan('generate --path="'.$testDir.'"')->assertExitCode(0);
+           
+            // Verify that specific templates still matches the expected content from each base reference
+            // BUT! contain the snippet expected from the snippet/extension folder
+            foreach($extComposer['extra']['templates'] as $templateName){
+                $failedFor = "Failed for:\n    Base Dir: ".$base."\n    Template Name: ".$templateName;
+              
+                // Get generated file content
+                $generatedFileName = './'.$templateName;
+                $generatedContent =  explode("\n", file_get_contents( $generatedFileName ) );
+               
+                // Get base reference file content
+                $referenceFileName = $base.'/'.$templateName;
+                $referenceContent = explode("\n", file_get_contents($referenceFileName) );
+               
+                // Get Difference  between generated and base reference
+                $diff = new \Diff($referenceContent, $generatedContent);
+                $renderer = new \Diff_Renderer_Text_Unified();
+                $differenceFound = '';
+                foreach (explode("\n", $diff->render($renderer)) as $line) {
+                    if (
+                        str_starts_with($line, '+') || 
+                        str_starts_with($line, '-') 
+                    ) {
+                        $differenceFound .= trim( $line,'+|-' )."\n";
+                    }
+                }
+
+                // There difference between the two should be the snippet added thanks to combining the base composer with snippet composer
+                $differenceFound = trim( $differenceFound, "\n");
+                $referenceContent = trim( file_get_contents( $ext.'/'.$templateName ),"\n");
+                $this->assertEquals( $referenceContent, $differenceFound,   $failedFor );
+
+                // Delete unnecessary files 
+                unlink( $generatedFileName );
+                // Delete combination folder and files
+                $fh = new \App\Services\File();
+                $fh->deleteDir('tests/Feature/Combination');
+            }
+        } 
     }    
 });
 

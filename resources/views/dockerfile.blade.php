@@ -31,6 +31,11 @@ RUN composer install --optimize-autoloader --no-dev \
 @include('octane-'.$octane)
 @endif
 
+@if( $filament && intval($filament) >= 3 )
+# If we're using Filament v3 and above, run caching commands...
+RUN  php artisan icons:cache && php artisan filament:cache-components
+@endif
+
 @if($build_assets)
 # Multi-stage build: Build static assets
 # This allows us to not include Node within the final container

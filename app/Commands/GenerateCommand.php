@@ -53,8 +53,9 @@ class GenerateCommand extends Command
             'dev' => $this->option('dev'),
             'laravel_version' => $scan->laravelVersion( $this->options() ),
             'fly' => $scan->isForFly(),
-            'octane' => $scan->octaneFlavor( $this->options() )
-        ];     
+            'octane' => $scan->octaneFlavor( $this->options() ),
+            'filament' => $scan->filamentVersion( $this->options() )
+        ];   
 
         // Define the list of templates to render.
         // The key is the template name, and the value is the output file name.

@@ -35,4 +35,18 @@ class File
         
         return json_decode( file_get_contents( $path ), 1 );
     }
+
+    public function deleteDir( $dir )
+    {
+        // First level delete for now
+        if( is_dir($dir) ){
+            $fileNames = scandir( $dir );
+            foreach( $fileNames as $fileName ){
+                $filePath =  $dir.'/'.$fileName;
+                if( is_file($filePath) )
+                    unlink( $filePath);
+            }
+        }
+        rmdir( $dir );
+    }
 }
