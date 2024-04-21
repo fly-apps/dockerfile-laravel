@@ -18,8 +18,8 @@ class GenerateCommand extends Command
                             {--force : Overwrite existing files}
                             {--skip : Keep existing files}
                             {--dev : Include dev dependencies like the local .env file}
-                            {--laravel-version= : Set the laravel version}
-                            {--path=. : Set the directory to check files in.}';
+                            {--path=. : Set the directory to check files in}
+                            {--frankenphp-binary : Generate a single file binary of the app via frankenphp}';
 
     /**
      * The description of the command.
@@ -54,7 +54,8 @@ class GenerateCommand extends Command
             'laravel_version' => $scan->laravelVersion( $this->options() ),
             'fly' => $scan->isForFly(),
             'octane' => $scan->octaneFlavor( $this->options() ),
-            'filament' => $scan->filamentVersion( $this->options() )
+            'filament' => $scan->filamentVersion( $this->options() ),
+            'frankenphp_binary' => $this->option('frankenphp-binary')
         ];   
 
         // Define the list of templates to render.
