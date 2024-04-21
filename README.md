@@ -20,7 +20,7 @@ The Dockerfile generated uses the base image published from https://github.com/f
 ### Installation
 
 #### Local
-Run `composer require fly-apps/dockerfile-laravel` in the Laravel project's base directory. After a successful installation, you should now have the binary available at your project's bin directory: `vendor/bin/dockerfile-laravel`. 
+Run `composer require fly-apps/dockerfile-laravel --dev` in the Laravel project's base directory. After a successful installation, you should now have the binary available at your project's bin directory: `vendor/bin/dockerfile-laravel`. 
 
 #### Global 
 Run `composer global require fly-apps/dockerfile-laravel`. After a successful installation, you should now have the binary available at your composer's, bin directory: `<path-to-composer-home>/vendor/bin/dockerfile-laravel`. You can view the path to your composer's home directory by checking with `composer -n config --global home`.
