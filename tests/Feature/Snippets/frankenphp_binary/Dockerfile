@@ -14,5 +14,5 @@ RUN ./dist/frankenphp-linux-x86_64 version \
 # EXPOSE ports 
 EXPOSE 443
 
-CMD ["dist/frankenphp-linux-x86_64", "run", "-c","dist/app/Caddyfile"]
+ENTRYPOINT ["dist/frankenphp-linux-x86_64", "run", "-c","dist/app/Caddyfile"]
 
