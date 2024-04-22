@@ -40,6 +40,29 @@ function setUpDirectoryForBaseSnippetCombo( $baseDirectory, $newComposerArr, $te
     }
 }
 
+function setFlags( $extCompArr, $pathToFiles ): string
+{
+    $flags = "";
+
+    // Where to scan files in 
+    if( $pathToFiles )
+        $flags .= '--path="'.$pathToFiles.'" ';
+    
+    // Additional flags from mock composer.json
+    if( isset($extCompArr['flags']) ){
+        foreach( $extCompArr['flags'] as $flagKey=>$flagVal ){
+            
+            if( is_bool($flagVal) )
+                $flags .= "--".$flagKey." ";
+            else{
+                $flags .= "--$flagKey='$flagVal' ";
+            }
+        }
+    }
+
+    return $flags;
+}
+
 // Test that expected files are generated properly for specific "base specifications"
 it('generates proper templates for each supported base', function ( ) 
 {
@@ -108,9 +131,12 @@ it('generates templates with proper snippets', function ()
             $testDir = 'tests/Feature/Combination';
             setUpDirectoryForBaseSnippetCombo( $base, $newComposer, $testDir );
 
+            // Get flags from mock composer.json file 
+            $flags = setFlags( $extComposer['extra'], $testDir );
+
             // Generate templates, by scanning contents of files in the combination folder
             // FIRST assert: command successfully runs and exits
-            $this->artisan('generate --path="'.$testDir.'"')->assertExitCode(0);
+            $this->artisan('generate '.$flags)->assertExitCode(0);
            
             // Verify that specific templates still matches the expected content from each base reference
             // BUT! contain the snippet expected from the snippet/extension folder
@@ -123,12 +149,17 @@ it('generates templates with proper snippets', function ()
                
                 // Get base reference file content
                 $referenceFileName = $base.'/'.$templateName;
-                $referenceContent = explode("\n", file_get_contents($referenceFileName) );
+                if( file_exists($referenceFileName) ){
+                    $referenceContent = explode("\n", file_get_contents($referenceFileName) );
+                }else
+                    $referenceContent = [""];
                
                 // Get Difference  between generated and base reference
                 $diff = new \Diff($referenceContent, $generatedContent);
                 $renderer = new \Diff_Renderer_Text_Unified();
                 $differenceFound = '';
+
+              
                 foreach (explode("\n", $diff->render($renderer)) as $line) {
                     if (
                         str_starts_with($line, '+') || 
@@ -137,10 +168,15 @@ it('generates templates with proper snippets', function ()
                         $differenceFound .= trim( $line,'+|-' )."\n";
                     }
                 }
+               
+                // Override the reference file with generated file content if needed; PLEASE double check diff and re-test this new ref manually!
+                if( env('OVERRIDE_TEST_REFERENCES')===true )
+                    file_put_contents( $ext.'/'.$templateName, $differenceFound );
 
                 // There difference between the two should be the snippet added thanks to combining the base composer with snippet composer
                 $differenceFound = trim( $differenceFound, "\n");
                 $referenceContent = trim( file_get_contents( $ext.'/'.$templateName ),"\n");
+                
                 $this->assertEquals( $referenceContent, $differenceFound,   $failedFor );
 
                 // Delete unnecessary files 

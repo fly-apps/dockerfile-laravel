@@ -45,7 +45,8 @@ class File
                 if( is_file($filePath) )
                     unlink( $filePath);
             }
+            rmdir( $dir );
         }
-        rmdir( $dir );
+      
     }
 }
