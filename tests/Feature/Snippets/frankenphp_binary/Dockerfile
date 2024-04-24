@@ -1,6 +1,6 @@
-EXPOSE 8080
 # Builder stage to create frankenphp binary containing our embedded app
 FROM dunglas/frankenphp:static-builder as builder
+
 # Copy our app found in the previous "base" stage
 WORKDIR /go/src/app/dist/app
 COPY --from=base /var/www/html .
@@ -19,8 +19,6 @@ FROM dunglas/frankenphp AS runner
 COPY --from=builder /go/src/app/dist/frankenphp-linux-x86_64 /usr/local/bin/frankenphp
 
 # EXPOSE ports 
-EXPOSE 80
-
 # Start app
-ENTRYPOINT ["/usr/local/bin/frankenphp", "php-server"] 
+ENTRYPOINT ["/usr/local/bin/frankenphp", "php-server", "--listen",":8080"] 
 

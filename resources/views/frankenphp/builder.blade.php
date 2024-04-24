@@ -19,7 +19,7 @@ FROM dunglas/frankenphp AS runner
 COPY --from=builder /go/src/app/dist/frankenphp-linux-x86_64 /usr/local/bin/frankenphp
 
 # EXPOSE ports 
-EXPOSE 80
+EXPOSE 8080
 
 # Start app
-ENTRYPOINT ["/usr/local/bin/frankenphp", "php-server"] 
+ENTRYPOINT ["/usr/local/bin/frankenphp", "php-server", "--listen",":8080"] 
