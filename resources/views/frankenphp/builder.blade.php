@@ -1,4 +1,4 @@
-# OUR NEW and last build stage!
+# Builder stage to create frankenphp binary containing our embedded app
 FROM dunglas/frankenphp:static-builder as builder
 
 # Copy our app found in the previous "base" stage
@@ -7,12 +7,19 @@ COPY --from=base /var/www/html .
 
 # Build the static binary, be sure to select only the PHP extensions you want
 WORKDIR /go/src/app/
-RUN ./dist/frankenphp-linux-x86_64 version \
-    export FRANKENPHP_VERSION=1.1.2 \
-    EMBED=dist/app/ \
+RUN EMBED=dist/app/ \
+    FRANKENPHP_VERSION=1.1.2 \
+    PHP_EXTENSIONS=bcmath,cli,common,curl,gd,intl,mbstring,mysql,pgsql,redis,soap,sqlite3,xml,zip,swoole,fpm \
     ./build-static.sh
 
-# EXPOSE ports 
-EXPOSE 443
+# Last runner stage, to only contain and run our generated binary from builder stage
+FROM dunglas/frankenphp AS runner
 
-ENTRYPOINT ["dist/frankenphp-linux-x86_64", "run", "-c","dist/app/Caddyfile"]
+# Replace the official binary by the one contained your custom modules
+COPY --from=builder /go/src/app/dist/frankenphp-linux-x86_64 /usr/local/bin/frankenphp
+
+# EXPOSE ports 
+EXPOSE 80
+
+# Start app
+ENTRYPOINT ["/usr/local/bin/frankenphp", "php-server"] 

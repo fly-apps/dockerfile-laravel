@@ -105,11 +105,6 @@ class Scanner
             $templates[ 'fly.scripts.caches'] = '.fly/scripts/caches.sh';
         }
 
-        // Frankenphp requires the Caddyfile to set the root of the web project
-        if( $options['frankenphp_binary'] ){
-            $templates['frankenphp.caddyfile'] = 'Caddyfile';
-        }
-
         return $templates;
     }
 

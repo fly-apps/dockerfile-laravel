@@ -86,7 +86,8 @@ RUN rsync -ar /var/www/html/public-npm/ /var/www/html/public/ \
     && chown -R www-data:www-data /var/www/html/public
 @endif
 
-EXPOSE 8080
 @if($frankenphp_binary)
 @include('frankenphp.builder')
+@else
+EXPOSE 8080
 @endif

@@ -5,6 +5,6 @@
         "flags":{
             "frankenphp-binary":true
         },
-        "templates":["Dockerfile", "Caddyfile"]
+        "templates":["Dockerfile"]
     }
 }
