@@ -11,7 +11,6 @@ class File
      */
     public function createFile( $output, $result )
     {
-    
         // Create the directory the file is supposed to be located in 
         if( strpos($output, '/') ){
             // Get path to file
@@ -46,7 +45,8 @@ class File
                 if( is_file($filePath) )
                     unlink( $filePath);
             }
+            rmdir( $dir );
         }
-        rmdir( $dir );
+      
     }
 }

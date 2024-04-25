@@ -1,0 +1,10 @@
+{
+    "require": {
+    },
+    "extra":{
+        "flags":{
+            "frankenphp-binary":true
+        },
+        "templates":["Dockerfile"]
+    }
+}
