@@ -19,15 +19,15 @@
             "email": "rubys@fly.io"
         }
     ],
-    "require": {},
     "require-dev": {
-        "laravel/pint": "^1.13",
-        "mockery/mockery": "^1.6",
-        "pestphp/pest": "^2.22",
+        "configured/haulable": "^0.4.0",
         "illuminate/view": "^10.0",
         "laravel-zero/framework": "^10.2",
-        "phpspec/php-diff": "^1.1",
-        "nunomaduro/termwind": "^1.15.1"
+        "laravel/pint": "^1.13",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/termwind": "^1.15.1",
+        "pestphp/pest": "^2.22",
+        "phpspec/php-diff": "^1.1"
     },
     "autoload": {
         "psr-4": {

@@ -1,0 +1,32 @@
+name: Run Builds
+ 
+on: [push]
+ 
+jobs:
+  tests:
+    name: Run Builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+ 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+ 
+      - name: Run composer install
+        run: composer install -n --prefer-dist
+ 
+      - name: Run phar build
+        run: php dockerfile-laravel app:build dockerfile-laravel --build-version=1.0.4
+
+      - name: Run windows builds
+        run: vendor/bin/haulable builds/dockerfile-laravel --platform="All Platforms"
+      
+      - name: Check files created
+        run: ls -l
+
+      - name: Move builds into the builds folder
+        run: mv windows_x64 builds/windows_x64 
