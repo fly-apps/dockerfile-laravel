@@ -25,16 +25,30 @@ jobs:
       - name: Run phar build
         run: php dockerfile-laravel app:build dockerfile-laravel --build-version=1.0.4
 
-      - name: Run windows builds
+      - name: Run all oses builds
         run: vendor/bin/haulable builds/dockerfile-laravel --platform="All Platforms"
-    
-      - name: Move builds into the builds folder
-        run: mv windows_x64 builds/windows_x64 && mv linux_aarch64 builds/linux_aarch64 && mv linux_x86_64 builds/linux_x86_64 && mv macos_apple builds/macos_apple && mv macos_intel builds/macos_intel 
-
-      - name: CHECK files
-        run: ls -l builds/
 
       - uses: actions/upload-artifact@v4
         with:
-          name: windows-artifact
-          path: builds/windows_x64/
+          name: windows_x64-artifact
+          path: windows_x64/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux_aarch64-artifact
+          path: linux_aarch64/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux_x86_64-artifact
+          path: linux_x86_64/
+
+       - uses: actions/upload-artifact@v4
+        with:
+          name: macos_apple-artifact
+          path: macos_apple/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos_intel-artifact
+          path: macos_intel/
