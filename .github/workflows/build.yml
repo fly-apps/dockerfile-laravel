@@ -40,4 +40,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: windows-artifact
-          path: builds/windows_x64/dockerfile-laravel
+          path: builds/windows_x64/
