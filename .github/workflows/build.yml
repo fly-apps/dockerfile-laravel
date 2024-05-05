@@ -38,5 +38,5 @@ jobs:
         run: |
           git config --global user.name 'Kathryn Tan'
           git config --global user.email 'ktan.software.developer@users.noreply.github.com'
-          git commit -a "Automated build"
+          git commit -m "Automated build"
           git push
