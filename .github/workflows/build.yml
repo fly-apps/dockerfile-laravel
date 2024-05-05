@@ -34,6 +34,9 @@ jobs:
       - name: Move builds into the builds folder
         run: mv windows_x64 builds/windows_x64 && mv linux_aarch64 builds/linux_aarch64 && mv linux_x86_64 builds/linux_x86_64 && mv macos_apple builds/macos_apple && mv macos_intel builds/macos_intel 
 
+      - name: CHECK files
+        run: ls -l builds/
+
       - uses: actions/upload-artifact@v4
         with:
           name: windows-artifact
