@@ -1,14 +1,20 @@
 name: Run Builds
  
 on: [push]
- 
+
+permissions:
+  contents: write
+
 jobs:
-  tests:
+  build:
     name: Run Builds
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [built, committed]
     steps:
       - uses: actions/checkout@v3
- 
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -24,12 +30,13 @@ jobs:
 
       - name: Run windows builds
         run: vendor/bin/haulable builds/dockerfile-laravel --platform="All Platforms"
-      
+    
       - name: Move builds into the builds folder
-        run: mv windows_x64 builds/windows_x64 && \
-        mv linux_aarch64 builds/linux_aarch64 && \
-        mv linux_x86_64 builds/linux_x86_64 && \
-        mv macos_apple builds/macos_apple && \
-        mv macos_intel builds/macos_intel 
+        run: mv windows_x64 builds/windows_x64 && mv linux_aarch64 builds/linux_aarch64 && mv linux_x86_64 builds/linux_x86_64 && mv macos_apple builds/macos_apple && mv macos_intel builds/macos_intel 
 
-
+      - name: Commit report
+        run: |
+          git config --global user.name 'Kathryn Tan'
+          git config --global user.email 'ktan.software.developer@users.noreply.github.com'
+          git commit -am "Automated build"
+          git push
