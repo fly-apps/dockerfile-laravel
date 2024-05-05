@@ -9,9 +9,6 @@ jobs:
   build:
     name: Run Builds
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target: [built, committed]
     steps:
       - uses: actions/checkout@v3
 
