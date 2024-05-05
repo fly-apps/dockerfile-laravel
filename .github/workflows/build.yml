@@ -33,4 +33,9 @@ jobs:
           name: windows_x64-artifact
           path: windows_x64/
 
-    
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux_aarch64-artifact
+          path: linux_aarch64/
+
+     
