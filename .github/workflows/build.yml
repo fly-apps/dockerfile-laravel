@@ -1,6 +1,10 @@
 name: Run Builds
  
-on: [push]
+on: [
+  push,
+  schedule: 
+    - cron: "* * */1 * *"
+]
 
 permissions:
   contents: write
