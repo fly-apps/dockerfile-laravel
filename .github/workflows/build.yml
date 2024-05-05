@@ -1,10 +1,9 @@
 name: Run Builds
  
-on: [
-  push,
+on: 
+  push:
   schedule: 
     - cron: "* * */1 * *"
-]
 
 permissions:
   contents: write
@@ -41,5 +40,21 @@ jobs:
         with:
           name: linux_aarch64-artifact
           path: linux_aarch64/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux_x86_64-artifact
+          path: linux_x86_64/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos_apple-artifact
+          path: macos_apple/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos_intel-artifact
+          path: macos_intel/
+
 
      
