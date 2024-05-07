@@ -1,9 +1,6 @@
 name: Run Builds
  
-on: 
-  push:
-  schedule: 
-    - cron: "* * */1 * *"
+on: [push]
 
 permissions:
   contents: write
@@ -56,5 +53,54 @@ jobs:
           name: macos_intel-artifact
           path: macos_intel/
 
+      - name: upload-to-tigris-windows
+        run: |
+        curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+        --header 'Accept: application/json' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "run_id": ${{ github.run_id }},
+            "name": "windows_x64-artifact" 
+        }'
+
+      - name: upload-to-tigris-linux-aarch
+        run: |
+        curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+        --header 'Accept: application/json' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "run_id": ${{ github.run_id }},
+            "name": "linux_aarch64-artifact" 
+        }'
+
+      - name: upload-to-tigris-linux-86
+        run: |
+        curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+        --header 'Accept: application/json' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "run_id": ${{ github.run_id }},
+            "name": "linux_x86_64-artifact" 
+        }'
+
+      - name: upload-to-tigris-macos_apple
+        run: |
+        curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+        --header 'Accept: application/json' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "run_id": ${{ github.run_id }},
+            "name": "macos_apple-artifact" 
+        }'
+
+      - name: upload-to-tigris-macos_intel
+        run: |
+        curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+        --header 'Accept: application/json' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "run_id": ${{ github.run_id }},
+            "name": "macos_intel-artifact" 
+        }'
 
      
