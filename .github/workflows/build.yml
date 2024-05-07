@@ -1,0 +1,109 @@
+name: Run Builds
+ 
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Run Builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+ 
+      - name: Run composer install
+        run: composer install -n --prefer-dist
+ 
+      - name: Run phar build
+        run: php dockerfile-laravel app:build dockerfile-laravel --build-version=1.0.4
+
+      - name: Run all oses builds
+        run: vendor/bin/haulable builds/dockerfile-laravel --platform="All Platforms"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows_x64-artifact
+          path: windows_x64/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux_aarch64-artifact
+          path: linux_aarch64/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux_x86_64-artifact
+          path: linux_x86_64/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos_apple-artifact
+          path: macos_apple/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos_intel-artifact
+          path: macos_intel/
+
+      - name: upload-to-tigris-windows
+        run: |
+          curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+          --header 'Accept: application/json' \
+          --header 'Content-Type: application/json' \
+          --data '{
+              "run_id": ${{ github.run_id }},
+              "name": "windows_x64-artifact" 
+          }'
+
+      - name: upload-to-tigris-linux-aarch
+        run: |
+          curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+          --header 'Accept: application/json' \
+          --header 'Content-Type: application/json' \
+          --data '{
+              "run_id": ${{ github.run_id }},
+              "name": "linux_aarch64-artifact" 
+          }'
+
+      - name: upload-to-tigris-linux-86
+        run: |
+          curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+          --header 'Accept: application/json' \
+          --header 'Content-Type: application/json' \
+          --data '{
+              "run_id": ${{ github.run_id }},
+              "name": "linux_x86_64-artifact" 
+          }'
+
+      - name: upload-to-tigris-macos_apple
+        run: |
+          curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+          --header 'Accept: application/json' \
+          --header 'Content-Type: application/json' \
+          --data '{
+              "run_id": ${{ github.run_id }},
+              "name": "macos_apple-artifact" 
+          }'
+
+      - name: upload-to-tigris-macos_intel
+        run: |
+          curl --location 'https://dockerfile-laravel-bucket-wispy-shape-3346.fly.dev/upload' \
+          --header 'Accept: application/json' \
+          --header 'Content-Type: application/json' \
+          --data '{
+              "run_id": ${{ github.run_id }},
+              "name": "macos_intel-artifact" 
+          }'
+
+     
