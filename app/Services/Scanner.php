@@ -103,6 +103,7 @@ class Scanner
             $templates[ 'fly.dockerignore' ] = '.dockerignore';
             $templates[ 'fly.entrypoint']    = '.fly/entrypoint.sh';
             $templates[ 'fly.scripts.caches'] = '.fly/scripts/caches.sh';
+            $templates[ 'fly.fpm-poold-conf.remote-file-access-conf'] = '.fly/fpm-poold-conf/remote-file-access.conf';
         }
 
         return $templates;
