@@ -8,6 +8,7 @@ FROM fideloper/fly-laravel:${PHP_VERSION} as base
 # See https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
 ARG PHP_VERSION
 ENV PHP_ALLOW_URL_FOPEN=0
+
 LABEL fly_launch_runtime="laravel"
 
 # copy application code, skipping files based on .dockerignore
@@ -19,10 +20,7 @@ RUN composer install --optimize-autoloader --no-dev \
     && chown -R www-data:www-data /var/www/html \
     && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run" > /etc/cron.d/laravel \
     && sed -i 's/protected \$proxies/protected \$proxies = "*"/g' app/Http/Middleware/TrustProxies.php;\
-    if [ -d .fly ]; then \
-        cp .fly/entrypoint.sh /entrypoint; chmod +x /entrypoint; \
-        cp .fly/fpm-poold-conf/remote-file-access.conf /etc/php/${PHP_VERSION}/fpm/pool.d/remote-file-access.conf; \
-    fi;
+    if [ -d .fly ]; then cp .fly/entrypoint.sh /entrypoint; chmod +x /entrypoint; fi;
 
 RUN rm -rf /etc/supervisor/conf.d/fpm.conf; \
     mv /etc/supervisor/octane-rr.conf /etc/supervisor/conf.d/octane-rr.conf; \
