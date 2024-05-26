@@ -26,6 +26,20 @@ class File
         return file_put_contents($output, implode("\n", $result) . "\n");
     }
 
+    /**
+     * Check if package.json exists in the directory
+     */
+    public function packageJsonExists( $directory )
+    {
+        $path = $directory.'/package.json';
+
+        if( file_exists( $path ) ) 
+            return true;
+        else{
+            return false;
+        }
+    }
+
     public function composerJsonContent( $directory )
     {
         $path = $directory.'/composer.json';

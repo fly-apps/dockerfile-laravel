@@ -82,6 +82,23 @@ class Scanner
             return false;
     }
 
+    /**
+     * Determines whether to build assets or not
+     */
+    public function shouldBuildAssets( array $options )
+    {
+        $shouldBuild = !$options['no-assets'];
+        $packageJsonExists = (new \App\Services\File())->packageJsonExists( $options['path'] );
+
+        if( $shouldBuild && $packageJsonExists ) {
+            // If want to build assets, make sure package.json exists
+            return true;
+        }else{
+            // Otherwise don't build
+            return false;
+        }
+    }
+
 
     /**
      * Lists templates to generate based on options passed
