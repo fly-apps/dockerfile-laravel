@@ -56,6 +56,7 @@ And that should generate a Dockerfile at the current directory the command was r
   * `--force` - Overwrite existing files
   * `--skip` - Keep existing files
   * `--dev` - Include dev dependencies in the creation of the image, i.e. the local .env file
+  * `--frankenphp-binary` - Generate a single file binary of the app via frankenphp
 
 The dockerfile generator accepts the following options:
 

@@ -26,7 +26,28 @@ class File
         return file_put_contents($output, implode("\n", $result) . "\n");
     }
 
-    public function composerJsonContent( $directory )
+    /**
+     * Check if package.json exists in the directory
+     * 
+     * @param string $directory - string used as directory where the package.json file is scanned in 
+     */
+    public function packageJsonExists( string $directory )
+    {
+        $path = $directory.'/package.json';
+
+        if( file_exists( $path ) ) 
+            return true;
+        else{
+            return false;
+        }
+    }
+
+    /**
+     * Get array of key value pairs from a composer.json file
+     * 
+     * @param string $directory - string used as directory where the composer.json file is scanned in 
+     */
+    public function composerJsonContent( string $directory )
     {
         $path = $directory.'/composer.json';
 
