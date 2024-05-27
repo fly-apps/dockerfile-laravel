@@ -28,8 +28,10 @@ class File
 
     /**
      * Check if package.json exists in the directory
+     * 
+     * @param string $directory - string used as directory where the package.json file is scanned in 
      */
-    public function packageJsonExists( $directory )
+    public function packageJsonExists( string $directory )
     {
         $path = $directory.'/package.json';
 
@@ -40,7 +42,12 @@ class File
         }
     }
 
-    public function composerJsonContent( $directory )
+    /**
+     * Get array of key value pairs from a composer.json file
+     * 
+     * @param string $directory - string used as directory where the composer.json file is scanned in 
+     */
+    public function composerJsonContent( string $directory )
     {
         $path = $directory.'/composer.json';
 
