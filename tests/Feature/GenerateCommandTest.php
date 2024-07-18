@@ -5,6 +5,39 @@ function ignoreFiles( )
     return ['composer.json','frankenphp','rr','.rr.yaml','package.json'];
 }
 
+function verifyFileCorrectlyGenerated( $test, $genDir, $refDir, $reference )
+{
+    // "tests/Feature/Dockerfile/fpm/pool.d/www.conf"
+    $refFilePath = $reference->getPathName();
+    $filePath    = trim( explode( $refDir, $refFilePath )[1], '/');
+    $failedForMsg = 'Failed for: "'.$refFilePath.'"';
+
+    // Skip if a setup file
+    if( in_array( $filePath, ignoreFiles())  ) return false;
+
+    // SECOND assert: a new file with the reference file's name was created; it should exist!
+    $generatedFilePath = $genDir.'/'.$filePath;
+    $test->assertFileExists( $generatedFilePath, $failedForMsg );
+    
+    // Contents of generated file
+    $generated = file_get_contents( $generatedFilePath );
+    // Override the reference file( found in getPathName ) with generated file content if needed; PLEASE double check diff and re-test this new ref manually!
+    if( env('OVERRIDE_TEST_REFERENCES')===true )
+        file_put_contents( $refFilePath, $generated );
+
+    // Contents of reference file
+    $expected = file_get_contents( $refFilePath ); 
+
+    // THIRD assert: contents are the same
+        // TODO: ignore different ARG VALUES
+    $test->assertEquals( $expected, $generated, $failedForMsg); 
+
+    // Clean UP: Delete generated file, no longer needed
+    unlink( $generatedFilePath );
+
+    return true;
+}
+
 /**
  * Sets up a test directory containing files combining base and snippet configuration:
  *  new composer json with merged details from base and snippet directories
@@ -105,7 +138,14 @@ it('generates proper templates for each supported base', function ( )
             unlink( $reference->getFileName() );
 
         }
+
+        if( is_dir('dockerfile') ){
+            // Delete combination folder and files
+            $fh = new \App\Services\File();
+            $fh->deleteDir('dockerfile');
+        }
     }    
+    
 });
 
 // Tests whether snippets are added into generated files for special configurations
@@ -187,10 +227,54 @@ it('generates templates with proper snippets', function ()
                 $fh = new \App\Services\File();
                 $fh->deleteDir('tests/Feature/Combination');
             }
+
+            if( is_dir('dockerfile') ){
+                // Delete combination folder and files
+                $fh = new \App\Services\File();
+                $fh->deleteDir('dockerfile');
+            }
         } 
 
         // Delete the generated package.json file from "generates proper templates for each supported base"
-        unlink( $base.'/package.json' );
+        unlink( $base.'/package.json' );       
     }    
+});
+
+// Tests that config files requried by Dockerfiles are generated  
+it('generates config files required by Dockerfiles', function()
+{
+    // Generate Dockerfile, by scanning contents of files in the current directory, set through --path
+    // FIRST assert: command successfully runs and exits
+    $this->artisan('generate')->assertExitCode(0);
+
+    // Gather files to verify from the Dockerfile directory, containing files required by the Dockerfile generatec
+    $baseDirectory = 'tests/Feature/Dockerfile';
+    $fileList =  \File::files( $baseDirectory );
+   
+    // Get directories in Dockerfile   
+    $directories = \File::directories( $baseDirectory );   
+    foreach( $directories as $dir ){
+
+        // Gather file paths from directory
+        $fileList =  array_merge( $fileList, \File::files( $dir ) );
+
+        // Gather files paths from subdirectory
+        $subDirectories = \File::directories( $dir );   
+        foreach( $subDirectories as $subDir ){
+           $fileList = array_merge( $fileList, \File::files( $subDir ) );
+        }
+    }
+
+    foreach( $fileList as $file ){
+        #if( $file->getPathName() !==   "tests/Feature/Dockerfile/supervisor/supervisord.conf") continue;
+        $result = verifyFileCorrectlyGenerated( $this, 'dockerfile', $baseDirectory, $file );
+    }
+
+    if( is_dir('dockerfile') ){
+        // Delete combination folder and files
+        $fh = new \App\Services\File();
+        $fh->deleteDir('dockerfile');
+    }
+
 });
 
