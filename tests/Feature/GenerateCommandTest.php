@@ -139,10 +139,10 @@ it('generates proper templates for each supported base', function ( )
 
         }
 
-        if( is_dir('dockerfile') ){
+        if( is_dir('.fly') ){
             // Delete combination folder and files
             $fh = new \App\Services\File();
-            $fh->deleteDir('dockerfile');
+            $fh->deleteDir('.fly');
         }
     }    
     
@@ -228,10 +228,10 @@ it('generates templates with proper snippets', function ()
                 $fh->deleteDir('tests/Feature/Combination');
             }
 
-            if( is_dir('dockerfile') ){
+            if( is_dir('.fly') ){
                 // Delete combination folder and files
                 $fh = new \App\Services\File();
-                $fh->deleteDir('dockerfile');
+                $fh->deleteDir('.fly');
             }
         } 
 
@@ -267,14 +267,18 @@ it('generates config files required by Dockerfiles', function()
 
     foreach( $fileList as $file ){
         #if( $file->getPathName() !==   "tests/Feature/Dockerfile/supervisor/supervisord.conf") continue;
-        $result = verifyFileCorrectlyGenerated( $this, 'dockerfile', $baseDirectory, $file );
+        // Verify the file is created in the .fly directory
+        $result = verifyFileCorrectlyGenerated( $this, '.fly', $baseDirectory, $file );
     }
 
-    if( is_dir('dockerfile') ){
+    if( is_dir('.fly') ){
         // Delete combination folder and files
         $fh = new \App\Services\File();
-        $fh->deleteDir('dockerfile');
+        $fh->deleteDir('.fly');
     }
+
+    if( is_file('Dockerfile') )
+        unlink('Dockerfile');
 
 });
 

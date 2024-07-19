@@ -55,7 +55,8 @@ class GenerateCommand extends Command
             'fly' => $scan->isForFly(),
             'octane' => $scan->octaneFlavor( $this->options() ),
             'filament' => $scan->filamentVersion( $this->options() ),
-            'frankenphp_binary' => $this->option('frankenphp-binary')
+            'frankenphp_binary' => $this->option('frankenphp-binary'),
+            'php_version' => '8.2'
         ];   
 
 

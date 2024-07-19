@@ -62,7 +62,6 @@ class File
         if( is_dir($dir) ){
             $fileNames = scandir( $dir );
             foreach( $fileNames as $fileName ){
-                $fileNamee = $fileName;
                 $filePath =  $dir.'/'.$fileName;
                 if( is_file($filePath) )
                     unlink( $filePath);
