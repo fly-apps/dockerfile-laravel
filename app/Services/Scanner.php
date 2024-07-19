@@ -119,6 +119,7 @@ class Scanner
         if ( $options['fly'] ) {
             // [directory.filename] => filepath to write to
             $templates[ 'fly.dockerignore' ] = '.dockerignore';
+            $templates[ 'fly.entrypoint']    = '.fly/entrypoint.sh';
             $templates[ 'fly.scripts.caches'] = '.fly/scripts/caches.sh';
         }
 
