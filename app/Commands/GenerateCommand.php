@@ -19,7 +19,8 @@ class GenerateCommand extends Command
                             {--skip : Keep existing files}
                             {--dev : Include dev dependencies like the local .env file}
                             {--path=. : Set the directory to check files in}
-                            {--frankenphp-binary : Generate a single file binary of the app via frankenphp}';
+                            {--frankenphp-binary : Generate a single file binary of the app via frankenphp}
+                            {--upstream-base-image : Generate a Dockerfile that uses an Upstream base image}';
 
     /**
      * The description of the command.
@@ -56,7 +57,8 @@ class GenerateCommand extends Command
             'octane' => $scan->octaneFlavor( $this->options() ),
             'filament' => $scan->filamentVersion( $this->options() ),
             'frankenphp_binary' => $this->option('frankenphp-binary'),
-            'php_version' => '8.2'
+            'php_version' => '8.2',
+            'upstream' => $this->option('upstream-base-image')
         ];   
 
 

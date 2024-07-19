@@ -245,7 +245,7 @@ it('generates config files required by Dockerfiles', function()
 {
     // Generate Dockerfile, by scanning contents of files in the current directory, set through --path
     // FIRST assert: command successfully runs and exits
-    $this->artisan('generate')->assertExitCode(0);
+    $this->artisan('generate --upstream-base-image')->assertExitCode(0);
 
     // Gather files to verify from the Dockerfile directory, containing files required by the Dockerfile generatec
     $baseDirectory = 'tests/Feature/Dockerfile';
@@ -265,9 +265,8 @@ it('generates config files required by Dockerfiles', function()
         }
     }
 
+    // Verify the file is created in the .fly directory
     foreach( $fileList as $file ){
-        #if( $file->getPathName() !==   "tests/Feature/Dockerfile/supervisor/supervisord.conf") continue;
-        // Verify the file is created in the .fly directory
         $result = verifyFileCorrectlyGenerated( $this, '.fly', $baseDirectory, $file );
     }
 

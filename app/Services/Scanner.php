@@ -109,7 +109,6 @@ class Scanner
      */
     public function templates( array $options )
     {
-       
         // Define the list of templates to render.
         // The key is the template name, and the value is the output file name.
         $templates = [
@@ -123,31 +122,39 @@ class Scanner
             $templates[ 'fly.scripts.caches'] = '.fly/scripts/caches.sh';
         }
 
-        // Only render the proper php package text file based on the php version
-        $phpPackage = 'php.packages.'.(str_replace( ".", "_", $options['php_version'])).'_txt';
-        $templates[ $phpPackage ] = '.fly/php/packages/'.$options['php_version'].'.txt';
-        $templates[ 'php.ondrej_ubuntu_php_gpg' ] = '.fly/php/ondrej_ubuntu_php.gpg';
+        // Generate files to be used alongside Upstream Base Image
+        if( $options['upstream'] === true ){
+            // Only render the proper php package text file based on the php version
+            $phpPackage = 'php.packages.'.(str_replace( ".", "_", $options['php_version'])).'_txt';
+            $templates[ $phpPackage ] = '.fly/php/packages/'.$options['php_version'].'.txt';
+            $templates[ 'php.ondrej_ubuntu_php_gpg' ] = '.fly/php/ondrej_ubuntu_php.gpg';
 
-        // Additional config files needed by the Dockerfile
-        $templates[ 'fly.entrypoint']    = '.fly/entrypoint.sh';
-        $templates[ 'fly.start-nginx_sh' ] = '.fly/start-nginx.sh';
-        $templates[ 'fpm.pool_d.www_conf' ] = '.fly/fpm/pool.d/www.conf';
+            // Additional config files needed by the Dockerfile
+            $templates[ 'fly.entrypoint']    = '.fly/entrypoint.sh';
+            $templates[ 'fly.start-nginx_sh' ] = '.fly/start-nginx.sh';
 
-        $templates[ 'nginx.conf_d.access-log_conf' ] = '.fly/nginx/conf.d/access-log.conf';
-        $templates[ 'nginx.conf_d.websockets_conf' ] = '.fly/nginx/conf.d/websockets.conf';
-        $templates[ 'nginx.sites-available.default-octane' ] = '.fly/nginx/sites-available/default-octane';
-        $templates[ 'nginx.sites-available.default' ] = '.fly/nginx/sites-available/default';
-        $templates[ 'nginx.nginx_conf' ] = '.fly/nginx/nginx.conf';
+            // Nginx
+            $templates[ 'fpm.pool_d.www_conf' ] = '.fly/fpm/pool.d/www.conf';
+            $templates[ 'nginx.conf_d.access-log_conf' ] = '.fly/nginx/conf.d/access-log.conf';
+            $templates[ 'nginx.conf_d.websockets_conf' ] = '.fly/nginx/conf.d/websockets.conf';
+            $templates[ 'nginx.sites-available.default-octane' ] = '.fly/nginx/sites-available/default-octane';
+            $templates[ 'nginx.sites-available.default' ] = '.fly/nginx/sites-available/default';
+            $templates[ 'nginx.nginx_conf' ] = '.fly/nginx/nginx.conf';
 
-        $templates[ 'supervisor.conf_d.fpm_conf' ] = '.fly/supervisor/conf.d/fpm.conf';
-        $templates[ 'supervisor.conf_d.nginx_conf' ] = '.fly/supervisor/conf.d/nginx.conf';
-        $templates[ 'supervisor.octane-franken_conf' ] = '.fly/supervisor/octane-franken.conf';
-        $templates[ 'supervisor.octane-rr_conf' ] =    '.fly/supervisor/octane-rr.conf';
-        $templates[ 'supervisor.octane-swoole_conf' ] = '.fly/supervisor/octane-swoole.conf';
-        $templates[ 'supervisor.supervisord_conf' ] = '.fly/supervisor/supervisord.conf';
+            // Supervisor Files
+            $templates[ 'supervisor.conf_d.fpm_conf' ] = '.fly/supervisor/conf.d/fpm.conf';
+            $templates[ 'supervisor.conf_d.nginx_conf' ] = '.fly/supervisor/conf.d/nginx.conf';
+            $templates[ 'supervisor.supervisord_conf' ] = '.fly/supervisor/supervisord.conf';
 
+            // Octane conf
+            if( $options['octane']=='frankenphp' )
+                $templates[ 'supervisor.octane-franken_conf' ] = '.fly/supervisor/octane-franken.conf';
+            else if( $options['octane']=='roadrunner' )
+                $templates[ 'supervisor.octane-rr_conf' ] =    '.fly/supervisor/octane-rr.conf';
+            else if( $options['octane']=='swoole' )
+                $templates[ 'supervisor.octane-swoole_conf' ] = '.fly/supervisor/octane-swoole.conf';
+        }
         return $templates;
     }
 
-    
 }
