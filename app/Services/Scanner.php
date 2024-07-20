@@ -126,8 +126,12 @@ class Scanner
         // Generate files to be used alongside Upstream Base Image
         if( $options['upstream'] === true ){
             // Only render the proper php package text file based on the php version
-            $phpPackage = 'php.packages.'.(str_replace( ".", "_", $options['php_version'])).'_txt';
-            $templates[ $phpPackage ] = '.fly/php/packages/'.$options['php_version'].'.txt';
+            $templates[ 'php.packages.7_4_txt' ] = '.fly/php/packages/7.4.txt';
+            $templates[ 'php.packages.8_0_txt' ] = '.fly/php/packages/8.0.txt';
+            $templates[ 'php.packages.8_1_txt' ] = '.fly/php/packages/8.1.txt';
+            $templates[ 'php.packages.8_2_txt' ] = '.fly/php/packages/8.2.txt';
+            $templates[ 'php.packages.8_3_txt' ] = '.fly/php/packages/8.3.txt';
+
             $templates[ 'php.ondrej_ubuntu_php_gpg' ] = '.fly/php/ondrej_ubuntu_php.gpg';
 
             // Additional config files needed by the Dockerfile

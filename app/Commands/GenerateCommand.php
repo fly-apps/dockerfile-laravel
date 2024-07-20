@@ -57,7 +57,6 @@ class GenerateCommand extends Command
             'octane' => $scan->octaneFlavor( $this->options() ),
             'filament' => $scan->filamentVersion( $this->options() ),
             'frankenphp_binary' => $this->option('frankenphp-binary'),
-            'php_version' => '8.2',
             'upstream' => $this->option('upstream-base-image')
         ];   
 
