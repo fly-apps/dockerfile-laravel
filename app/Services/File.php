@@ -3,6 +3,15 @@ namespace App\Services;
 
 class File
 {
+
+    /**
+     * There are some files that need exact content copies, don't add new lines for this at end
+     */
+    public function exactCopiesOnlyFiles()
+    {
+        return ['.fly/php/ondrej_ubuntu_php.gpg'];
+    }
+
     /**
      * Generate a file with content
      * 
@@ -23,7 +32,10 @@ class File
         }
        
         // Create the file, finally!
-        return file_put_contents($output, implode("\n", $result) . "\n");
+        if( in_array( $output, $this->exactCopiesOnlyFiles()) )
+            return file_put_contents($output, implode("\n", $result));
+        else
+            return file_put_contents($output, implode("\n", $result) . "\n");
     }
 
     /**
