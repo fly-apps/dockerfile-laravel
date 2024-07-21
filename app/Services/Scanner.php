@@ -125,10 +125,12 @@ class Scanner
 
         // Generate files to be used alongside Upstream Base Image
         if( $options['upstream'] === true ){
+            
             // Additional config files needed by the Dockerfile
             $templates[ 'fly.entrypoint']    = '.fly/entrypoint.sh';
             $templates[ 'fly.start-nginx_sh' ] = '.fly/start-nginx.sh';
-
+            $templates[ 'fly.scripts.caches'] = '.fly/scripts/caches.sh';
+            
             // Nginx
             $templates[ 'fpm.pool_d.www_conf' ] = '.fly/fpm/pool.d/www.conf';
             $templates[ 'nginx.conf_d.access-log_conf' ] = '.fly/nginx/conf.d/access-log.conf';
