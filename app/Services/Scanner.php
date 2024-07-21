@@ -71,34 +71,6 @@ class Scanner
         }
     }
 
-    public function phpVersion()
-    {
-        try{
-            // Composer json contains filament requirement
-            $composerContent = (new \App\Services\File())->composerJsonContent( $options['path'] );
-
-            // Extract version
-            if( isset( $composerContent['require'] ) && isset($composerContent['require']['php']) ){
-                $phpVersion = $composerContent['require']['php'];
-                if( strpos( $phpVersion, '|' )!==false ){
-                    $list = explode( '|', $phpVersion );
-                    $phpVersion = $list[ count($list )-1 ];
-
-                }
-
-                $phpVersion = trim($phpVersion, '^');
-                if( is_numeric($phpVersion) )
-                    return $phpVersion;
-                
-            }
-        }catch(\Exception $e){
-            dd( $e );
-        }
-
-        // Return default
-        return '8.2';
-    }
-
     /**
      * Scan directory and check if applicable for Fly.io deployment
      */
