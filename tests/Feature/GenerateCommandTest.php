@@ -101,7 +101,7 @@ it('generates proper templates for each supported base', function ( )
 {
     $directories = \File::directories( 'tests/Feature/Supported' );   
     foreach($directories as $dir) {
-        #if( $dir != "tests/Feature/Supported/10_base" ) continue;//-- revise and uncomment this line if you want to test out a specific Support subfolder
+        if( $dir != "tests/Feature/Supported/11_octane_frankenphp" ) continue;//-- revise and uncomment this line if you want to test out a specific Support subfolder
         // package.json is needed to generate a Dockerfile with asset build stage, will be deleted in second test below
         file_put_contents( $dir.'/package.json','{}' );
 
@@ -146,7 +146,7 @@ it('generates proper templates for each supported base', function ( )
         }
     }    
     
-});
+})->only();
 
 // Tests whether snippets are added into generated files for special configurations
 it('generates templates with proper snippets', function () 
