@@ -248,7 +248,7 @@ it('generates config files required by Dockerfiles', function()
 {
     // Generate Dockerfile, by scanning contents of files in the current directory, set through --path
     // FIRST assert: command successfully runs and exits
-    $this->artisan('generate --upstream-base-image')->assertExitCode(0);
+    $this->artisan('generate')->assertExitCode(0);
 
     // Gather files to verify from the Dockerfile directory, containing files required by the Dockerfile generatec
     $baseDirectory = 'tests/Feature/Dockerfile';
