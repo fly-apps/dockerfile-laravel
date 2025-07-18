@@ -94,7 +94,7 @@ Before diving into making local development changes, there're some to-do's to ge
 
 1. Clone the repository
 2. Get the repo dependencies with `composer install`
-3. And, just in case you ever find an error about files not being available, you might be able to fix this with providing the proper permission to the box package used by Laravel Zero framework: `chmod 755 vendor/laravel-zero/framework/bin/box`. 
+3. If you run into any issues, find the `Getting Pass Hurdles` section below for common solutions
 
 Then, yes. After set up, you can make your changes!
 
@@ -111,6 +111,16 @@ Simply run the build command:
 ```
 php dockerfile-laravel app:build
 ```
+
+### Getting Pass Hurdles
+Below are some common problems with local set up and building
+
+#### Files Not available
+If you ever find an error about files not being available, you might be able to fix this with providing the proper permission to the box package used by Laravel Zero framework: `chmod 755 vendor/laravel-zero/framework/bin/box`. 
+
+#### Build Compile Error
+If your build runs into a compile error, try upgrading to the next Laravel Zero Version, see [upgrade guide](https://laravel-zero.com/docs/upgrade#upgrade-11.0.0).
+
 #### Build View Changes 
 If changes were made in any of the view files, make sure to clear the cached views( For now, this can be done by manually deleting the cached files ). The path to where the views' caches are stored is configured in `config/view.php`. 
 
