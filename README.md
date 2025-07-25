@@ -94,7 +94,7 @@ Before diving into making local development changes, there're some to-do's to ge
 
 1. Clone the repository
 2. Get the repo dependencies with `composer install`
-3. If you run into any issues, find the `Getting Pass Hurdles` section below for common solutions
+3. If you run into any issues, find the `Getting Past Hurdles` section below for common solutions
 
 Then, yes. After set up, you can make your changes!
 
@@ -134,6 +134,12 @@ Once you've successfully built your changes, you have to test how it turned out.
 <path-to-dockerfile-laravel-dir>/builds/dockerfile-laravel generate
 ```
 And that's it! You should now see a fresh Dockerfile available for your project.
+
+### Testing the Dockerfile generated Locally
+1. Make sure that the necessary files that are needed locally is available to the image by reviewing the .dockerignore and .gitignore
+2. Build the image with `docker build -t <image-name> .`
+3. Run the image with `docker run -it -p 8080:8080 <image-name>`
+
 
 ## Test Cases
 There are two general purpose test cases in `tests/Feature/GenerateCommandTest.php`:
