@@ -24,10 +24,10 @@
         "laravel/pint": "^1.13",
         "mockery/mockery": "^1.6",
         "pestphp/pest": "^2.22",
-        "illuminate/view": "^10.0",
-        "laravel-zero/framework": "^10.2",
+        "illuminate/view": "^11.0",
+        "laravel-zero/framework": "^11.0",
         "phpspec/php-diff": "^1.1",
-        "nunomaduro/termwind": "^1.15.1"
+        "nunomaduro/termwind": "^2.0"
     },
     "autoload": {
         "psr-4": {

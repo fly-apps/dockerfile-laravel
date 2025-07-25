@@ -97,7 +97,7 @@ COPY --from=base /var/www/html/vendor /app/vendor
 # lock file we might find. Defaults to
 # NPM if no lock file is found.
 # Note: We run "production" for Mix and "build" for Vite
-RUN if [ -f "vite.config.js" ]; then \
+RUN if [ -f "vite.config.js" ] || [ -f "vite.config.ts" ]; then \
         ASSET_CMD="build"; \
     else \
         ASSET_CMD="production"; \
@@ -128,7 +128,7 @@ FROM base
 COPY --from=node_modules_go_brrr /app/public /var/www/html/public-npm
 RUN rsync -ar /var/www/html/public-npm/ /var/www/html/public/ \
     && rm -rf /var/www/html/public-npm \
-    && chown -R www-data:www-data /var/www/html/public
+    && chown -R www-data:www-data /var/www/html
 @endif
 
 # 5. Setup Entrypoint
