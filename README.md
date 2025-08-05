@@ -141,7 +141,7 @@ And that's it! You should now see a fresh Dockerfile available for your project.
 3. Run the image with `docker run -it -p 8080:8080 <image-name>`
 
 
-## Test Cases
+## Test Case
 There are two general purpose test cases in `tests/Feature/GenerateCommandTest.php`:
 
 1. `generates proper templates for each supported base` 
@@ -170,3 +170,5 @@ Once you've cooked up and tested your local changes, you can make a Pull Request
 Of course, you don't have to create a PR. If there are any feature or bug that makes sense for the repository, you can also create an Issue about it. 
 
 Once submitted, the Laravel team at Fly.io will review your PR/Issue and decide whether it can be successfully added into the official repository. Your contribution will be much appreciated---thank you!
+
+
