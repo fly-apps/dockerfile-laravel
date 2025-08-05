@@ -141,7 +141,7 @@ And that's it! You should now see a fresh Dockerfile available for your project.
 3. Run the image with `docker run -it -p 8080:8080 <image-name>`
 
 
-## Test Cases
+## Test Case
 There are two general purpose test cases in `tests/Feature/GenerateCommandTest.php`:
 
 1. `generates proper templates for each supported base` 
