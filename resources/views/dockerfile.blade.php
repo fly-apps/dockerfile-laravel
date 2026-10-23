@@ -63,7 +63,7 @@ RUN composer install --optimize-autoloader --no-dev \
     && chown -R www-data:www-data /var/www/html \
     && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run" > /etc/cron.d/laravel \
 @if( preg_match("~\^|^1[1-9]~", $laravel_version ) )
-    && sed -i='' '/->withMiddleware(function (Middleware \$middleware) {/a\
+    && sed -i '/->withMiddleware(function (Middleware \$middleware) {/a\
         \$middleware->trustProxies(at: "*");\
     ' bootstrap/app.php; \ 
 @else

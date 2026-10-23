@@ -138,7 +138,7 @@ class GenerateCommand extends Command
                     $renderer = new \Diff_Renderer_Text_Unified();
                     foreach (explode("\n", $diff->render($renderer)) as $line) {
                         if (str_starts_with($line, '---') || str_starts_with($line, '+++')) {
-                            $this->line(line);
+                            $this->line($line);
                         } elseif (str_starts_with($line, '@@')) {
                             $this->line('<fg=blue>' . $line . '</>');
                         } elseif (str_starts_with($line, '+')) {
