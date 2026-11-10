@@ -143,6 +143,7 @@ class Scanner
         $templates[ 'fly.php.packages.8_2_txt' ] = '.fly/php/packages/8.2.txt';
         $templates[ 'fly.php.packages.8_3_txt' ] = '.fly/php/packages/8.3.txt';
         $templates[ 'fly.php.packages.8_4_txt' ] = '.fly/php/packages/8.4.txt';
+        $templates[ 'fly.php.packages.8_5_txt' ] = '.fly/php/packages/8.5.txt';
         $templates[ 'fly.php.ondrej_ubuntu_php_gpg' ] = '.fly/php/ondrej_ubuntu_php.gpg';
 
         // Supervisor Files
