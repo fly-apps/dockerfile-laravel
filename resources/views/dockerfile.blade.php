@@ -133,7 +133,7 @@ RUN rsync -ar /var/www/html/public-npm/ /var/www/html/public/ \
 
 # 5. Setup Entrypoint
 @if($frankenphp_binary)
-@include('frankenphp.builder')
+@include('fly.frankenphp.builder')
 @else
 EXPOSE 8080
 @endif
